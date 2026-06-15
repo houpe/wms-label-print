@@ -387,7 +387,7 @@ export default function Home() {
   const totalQuantity = Object.values(quantities).reduce((sum, q) => sum + q, 0)
 
   const fetchStores = useCallback(async () => {
-    const res = await fetch('/api/stores')
+    const res = await fetch('/print/api/stores')
     const data = await res.json()
     setStores(data)
     const lastStoreId = localStorage.getItem('lastStoreId')
@@ -397,7 +397,7 @@ export default function Home() {
   }, [])
 
   const fetchContacts = useCallback(async (storeId: string) => {
-    const res = await fetch(`/api/contacts?storeId=${storeId}`)
+    const res = await fetch(`/print/api/contacts?storeId=${storeId}`)
     const data = await res.json()
     setContacts(data)
     const lastContactId = localStorage.getItem('lastContactId')
@@ -410,7 +410,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchStores()
-    fetch('/api/contacts').then(res => res.json()).then(data => setAllContacts(data)).catch(() => {})
+    fetch('/print/api/contacts').then(res => res.json()).then(data => setAllContacts(data)).catch(() => {})
   }, [fetchStores])
 
   useEffect(() => {
@@ -480,7 +480,7 @@ export default function Home() {
     setPrinting(true)
     printLabels(labels, () => setPrinting(false))
 
-    fetch('/api/print-orders', {
+    fetch('/print/api/print-orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -958,7 +958,7 @@ function BatchUploadPanel({
     if (labels.length === 0) return
     printLabels(labels)
 
-    fetch('/api/print-orders', {
+    fetch('/print/api/print-orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ storeId: '', contactId: '', temperature: '批量上传', quantity: labels.length }),

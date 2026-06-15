@@ -28,8 +28,8 @@ export default function ContactsPage() {
 
   const fetchData = useCallback(async () => {
     const [contactsRes, storesRes] = await Promise.all([
-      fetch('/api/contacts'),
-      fetch('/api/stores'),
+      fetch('/print/api/contacts'),
+      fetch('/print/api/stores'),
     ])
     const [contactsData, storesData] = await Promise.all([
       contactsRes.json(),
@@ -57,13 +57,13 @@ export default function ContactsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (editing) {
-      await fetch(`/api/contacts/${editing.id}`, {
+      await fetch(`/print/api/contacts/${editing.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone, address, remark }),
       })
     } else {
-      await fetch('/api/contacts', {
+      await fetch('/print/api/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone, address, remark, storeId }),
@@ -75,7 +75,7 @@ export default function ContactsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('确定要删除这个收货人吗？')) return
-    await fetch(`/api/contacts/${id}`, { method: 'DELETE' })
+    await fetch(`/print/api/contacts/${id}`, { method: 'DELETE' })
     fetchData()
   }
 

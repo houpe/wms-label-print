@@ -19,7 +19,7 @@ export default function StoresPage() {
   const [loading, setLoading] = useState(true)
 
   const fetchStores = useCallback(async () => {
-    const res = await fetch('/api/stores')
+    const res = await fetch('/print/api/stores')
     const data = await res.json()
     setStores(data)
     setLoading(false)
@@ -40,13 +40,13 @@ export default function StoresPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (editing) {
-      await fetch(`/api/stores/${editing.id}`, {
+      await fetch(`/print/api/stores/${editing.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, address }),
       })
     } else {
-      await fetch('/api/stores', {
+      await fetch('/print/api/stores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, address }),
@@ -58,7 +58,7 @@ export default function StoresPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('确定要删除这个门店吗？')) return
-    await fetch(`/api/stores/${id}`, { method: 'DELETE' })
+    await fetch(`/print/api/stores/${id}`, { method: 'DELETE' })
     fetchStores()
   }
 
