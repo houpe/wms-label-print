@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 
 interface Store {
   id: string
@@ -184,6 +186,183 @@ ${html}
   }
 }
 
+function formatToDate(dateStr: string): string {
+  if (!dateStr) return ''
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr
+
+  try {
+    let normalized = dateStr.trim().replace(/\//g, '-')
+    // 处理 yy-MM-dd HH:mm:ss 或 yy-MM-dd 这种2位年份
+    if (/^\d{2}-\d{2}-\d{2}/.test(normalized)) {
+      normalized = '20' + normalized
+    }
+    const datePart = normalized.split(/[ T]/)[0]
+    const d = new Date(datePart)
+    if (!isNaN(d.getTime())) {
+      const pad = (n: number) => String(n).padStart(2, '0')
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+    }
+  } catch {
+    // ignore
+  }
+  return ''
+}
+
+interface SingleSearchableSelectProps {
+  value: string
+  onChange: (id: string) => void
+  options: { value: string; label: string }[]
+  placeholder?: string
+  isDisabled?: boolean
+  instanceId?: string
+}
+
+function SingleSearchableSelect({ value, onChange, options, placeholder, isDisabled, instanceId }: SingleSearchableSelectProps) {
+  const selectValue = options.find(opt => opt.value === value) || null
+
+  return (
+    <Select
+      instanceId={instanceId}
+      isClearable
+      isDisabled={isDisabled}
+      placeholder={placeholder}
+      value={selectValue}
+      onChange={(newValue) => {
+        onChange(newValue ? newValue.value : '')
+      }}
+      options={options}
+      styles={{
+        control: (base) => ({
+          ...base,
+          minHeight: '40px',
+          height: '40px',
+          borderRadius: 'var(--radius-sm, 8px)',
+          borderColor: 'var(--input-border, #CBD5C3)',
+          borderWidth: '2px',
+          boxShadow: 'none',
+          fontSize: '15px',
+          background: 'var(--input-bg, #F8FAF8)',
+          '&:hover': {
+            borderColor: 'var(--input-focus, #217346)',
+          }
+        }),
+        valueContainer: (base) => ({
+          ...base,
+          padding: '0 10px',
+          height: '36px',
+        }),
+        input: (base) => ({
+          ...base,
+          margin: '0',
+          padding: '0',
+        }),
+        singleValue: (base) => ({
+          ...base,
+          color: 'var(--text, #1E293B)',
+        }),
+        placeholder: (base) => ({
+          ...base,
+          color: 'var(--text-muted, #64748B)',
+        }),
+        indicatorsContainer: (base) => ({
+          ...base,
+          height: '36px',
+        }),
+        dropdownIndicator: (base) => ({
+          ...base,
+          padding: '4px',
+        }),
+        clearIndicator: (base) => ({
+          ...base,
+          padding: '4px',
+        }),
+        menu: (base) => ({
+          ...base,
+          fontSize: '15px',
+          zIndex: 9999,
+        })
+      }}
+    />
+  )
+}
+
+interface BatchComboboxProps {
+  value: string
+  onChange: (v: string) => void
+  options: { value: string; label: string }[]
+  placeholder?: string
+}
+
+function BatchCombobox({ value, onChange, options, placeholder }: BatchComboboxProps) {
+  const selectValue = value ? { value, label: value } : null
+
+  return (
+    <div style={{ position: 'relative', width: '100%' }} title={value || undefined}>
+      <CreatableSelect
+        isClearable
+        placeholder={placeholder || '选择或输入...'}
+        value={selectValue}
+        onChange={(newValue) => {
+          onChange(newValue ? newValue.value : '')
+        }}
+        onCreateOption={(inputValue) => {
+          onChange(inputValue)
+        }}
+        options={options}
+        menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+          control: (base) => ({
+            ...base,
+            minHeight: '30px',
+            height: '30px',
+            borderRadius: '4px',
+            borderColor: 'var(--card-border, #CBD5C3)',
+            boxShadow: 'none',
+            fontSize: '13px',
+            background: '#fff',
+            '&:hover': {
+              borderColor: 'var(--primary, #217346)',
+            }
+          }),
+          valueContainer: (base) => ({
+            ...base,
+            padding: '0 8px',
+            height: '28px',
+            lineHeight: '28px',
+          }),
+          input: (base) => ({
+            ...base,
+            margin: '0',
+            padding: '0',
+          }),
+          singleValue: (base) => ({
+            ...base,
+            color: 'var(--text, #1E293B)',
+          }),
+          indicatorsContainer: (base) => ({
+            ...base,
+            height: '28px',
+          }),
+          dropdownIndicator: (base) => ({
+            ...base,
+            padding: '2px',
+          }),
+          clearIndicator: (base) => ({
+            ...base,
+            padding: '2px',
+          }),
+          menu: (base) => ({
+            ...base,
+            fontSize: '13px',
+            zIndex: 9999,
+          })
+        }}
+      />
+    </div>
+  )
+}
+
 export default function Home() {
   const [stores, setStores] = useState<Store[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -199,7 +378,7 @@ export default function Home() {
   const [printDate, setPrintDate] = useState(() => {
     const now = new Date()
     const pad = (n: number) => String(n).padStart(2, '0')
-    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
   })
   const [remark, setRemark] = useState('')
 
@@ -259,7 +438,7 @@ export default function Home() {
     setQuantities(prev => ({ ...prev, [temp]: num }))
   }
 
-  // 单件打印
+  // 单次打印
   const handleSinglePrint = () => {
     if (!selectedStoreId || !selectedContactId || totalQuantity === 0) return
     const store = stores.find((s) => s.id === selectedStoreId)
@@ -267,8 +446,10 @@ export default function Home() {
     if (!store || !contact) return
 
     // 用户选择的日期 + 当前时间
-    const d = new Date(printDate)
-    const dateStr = d.toLocaleString('zh-CN', {
+    const selectDate = new Date(printDate)
+    const now = new Date()
+    selectDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds())
+    const dateStr = selectDate.toLocaleString('zh-CN', {
       year: '2-digit', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
     })
@@ -321,7 +502,7 @@ export default function Home() {
         <div className="blob blob-2" />
       </div>
 
-      <div className="app-inner" style={{ maxWidth: 1200 }}>
+      <div className="app-inner" style={{ maxWidth: 1400 }}>
         {/* Header */}
         <div className="fade-in-up" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -379,10 +560,13 @@ export default function Home() {
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 1L3 5.5V14h4V9.5h2V14h4V5.5L8 1z" fill="currentColor"/></svg></span>
                   门店
                 </div>
-                <select value={selectedStoreId} onChange={(e) => handleStoreChange(e.target.value)} className="form-select">
-                  <option value="">请选择门店</option>
-                  {stores.map((store) => (<option key={store.id} value={store.id}>{store.name}</option>))}
-                </select>
+                 <SingleSearchableSelect
+                  value={selectedStoreId}
+                  onChange={handleStoreChange}
+                  options={stores.map((s) => ({ value: s.id, label: s.name }))}
+                  placeholder="请选择门店"
+                  instanceId="store-select"
+                />
               </div>
 
               <div className="field-group">
@@ -390,10 +574,14 @@ export default function Home() {
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="4.5" r="2.5" fill="currentColor"/><path d="M3 13.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" strokeWidth="2" fill="none"/></svg></span>
                   收货人
                 </div>
-                <select value={selectedContactId} onChange={(e) => handleContactChange(e.target.value)} disabled={!selectedStoreId} className="form-select">
-                  <option value="">请选择收货人</option>
-                  {contacts.map((c) => (<option key={c.id} value={c.id}>{c.name} · {c.phone}</option>))}
-                </select>
+                <SingleSearchableSelect
+                  value={selectedContactId}
+                  onChange={handleContactChange}
+                  options={contacts.map((c) => ({ value: c.id, label: `${c.name} · ${c.phone}` }))}
+                  placeholder="请选择收货人"
+                  isDisabled={!selectedStoreId}
+                  instanceId="contact-select"
+                />
               </div>
 
               <div className="field-group">
@@ -401,7 +589,13 @@ export default function Home() {
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.5"/></svg></span>
                   日期
                 </div>
-                <input type="datetime-local" value={printDate} onChange={(e) => setPrintDate(e.target.value)} className="form-select" />
+                <input
+                  type="date"
+                  value={printDate}
+                  onChange={(e) => setPrintDate(e.target.value)}
+                  className="form-select"
+                  style={{ height: '40px', padding: '0 14px', boxSizing: 'border-box' }}
+                />
               </div>
             </div>
 
@@ -412,9 +606,85 @@ export default function Home() {
               </div>
               <div className="temp-qty-grid">
                 {TEMP_LIST.map((temp) => (
-                  <div key={temp} className="temp-qty-card">
-                    <div className="temp-qty-label"><span>{TEMP_ICONS[temp]}</span><span>{temp}</span></div>
-                    <input type="number" min={0} value={quantities[temp] || 0} onChange={(e) => handleQuantityChange(temp, e.target.value)} onFocus={(e) => e.target.select()} className="form-input" style={{ padding: '8px 12px', fontSize: 14 }} />
+                  <div key={temp} className="temp-qty-card" style={{ padding: '12px 10px' }}>
+                    <div className="temp-qty-label" style={{ marginBottom: 6 }}>
+                      <span>{TEMP_ICONS[temp]}</span>
+                      <span>{temp}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'var(--input-bg, #F8FAF8)', border: '2px solid var(--input-border, #CBD5C3)', borderRadius: 'var(--radius-sm, 8px)', overflow: 'hidden', height: '38px' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = quantities[temp] || 0
+                          handleQuantityChange(temp, String(Math.max(0, current - 1)))
+                        }}
+                        style={{
+                          width: '36px',
+                          height: '100%',
+                          border: 'none',
+                          background: 'transparent',
+                          cursor: 'pointer',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          color: 'var(--text-muted, #64748B)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          userSelect: 'none',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={quantities[temp] || 0}
+                        onChange={(e) => handleQuantityChange(temp, e.target.value.replace(/\D/g, ''))}
+                        onFocus={(e) => e.target.select()}
+                        style={{
+                          flex: 1,
+                          width: '100%',
+                          height: '100%',
+                          border: 'none',
+                          borderLeft: '1px solid var(--input-border, #CBD5C3)',
+                          borderRight: '1px solid var(--input-border, #CBD5C3)',
+                          textAlign: 'center',
+                          fontSize: '14px',
+                          fontWeight: '700',
+                          background: 'transparent',
+                          outline: 'none',
+                          padding: 0,
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = quantities[temp] || 0
+                          handleQuantityChange(temp, String(current + 1))
+                        }}
+                        style={{
+                          width: '36px',
+                          height: '100%',
+                          border: 'none',
+                          background: 'transparent',
+                          cursor: 'pointer',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          color: 'var(--text-muted, #64748B)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          userSelect: 'none',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -763,7 +1033,7 @@ function BatchUploadPanel({
 
   // 编辑器界面
   return (
-    <div className="card fade-in-up" style={{ maxWidth: 1100, margin: '0 auto', animationDelay: '0.1s' }}>
+    <div className="card fade-in-up" style={{ maxWidth: 1400, margin: '0 auto', animationDelay: '0.1s' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <h2 className="card-title" style={{ margin: 0 }}>
           <span className="icon"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="2" y="2" width="4" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none"/><rect x="6.5" y="4" width="4" height="3" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="11" y="2" width="3" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/><rect x="2.5" y="9" width="4.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="8" y="9" width="3.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/></svg></span>批量编辑
@@ -794,16 +1064,16 @@ function BatchUploadPanel({
         <table className="batch-table" style={{ minHeight: 170 }}>
           <thead>
             <tr>
-              <th style={{ width: 40 }}>#</th>
-              <th>门店</th>
-              <th>收货人</th>
-              <th>电话</th>
-              <th>地址</th>
-              <th style={{ width: 180 }}>日期</th>
-              <th style={{ width: 90 }}>温区</th>
-              <th style={{ width: 70 }}>件数</th>
-              <th style={{ width: 120 }}>备注</th>
-              <th style={{ width: 40 }}></th>
+              <th style={{ width: 40, minWidth: 40, textAlign: 'center' }}>#</th>
+              <th style={{ minWidth: 180 }}>门店</th>
+              <th style={{ minWidth: 120 }}>收货人</th>
+              <th style={{ minWidth: 120 }}>电话</th>
+              <th style={{ width: 90, minWidth: 90 }}>温区</th>
+              <th style={{ width: 70, minWidth: 70 }}>件数</th>
+              <th style={{ minWidth: 120 }}>备注</th>
+              <th style={{ minWidth: 200 }}>地址</th>
+              <th style={{ width: 130, minWidth: 130 }}>日期</th>
+              <th style={{ width: 40, minWidth: 40 }}></th>
             </tr>
           </thead>
           <tbody>
@@ -813,7 +1083,7 @@ function BatchUploadPanel({
               return (
                 <React.Fragment key={row.id}>
                   <tr className={hasErr ? 'batch-row-error' : ''}>
-                    <td className="batch-row-num">{row.id + 1}</td>
+                    <td className="batch-row-num" title={`第 ${row.id + 1} 行`}>{row.id + 1}</td>
                   <td>
                     <BatchCombobox
                       value={row.store}
@@ -828,9 +1098,7 @@ function BatchUploadPanel({
                       options={contacts.map(c => ({ value: c.name, label: c.name }))}
                     />
                   </td>
-                  <td><input className="batch-input" value={row.phone} onChange={(e) => updateCell(row.id, 'phone', e.target.value)} /></td>
-                  <td><input className="batch-input" value={row.address} onChange={(e) => updateCell(row.id, 'address', e.target.value)} placeholder="选填" /></td>
-                  <td><input className="batch-input" value={row.date} onChange={(e) => updateCell(row.id, 'date', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.phone} onChange={(e) => updateCell(row.id, 'phone', e.target.value)} title={row.phone} /></td>
                   <td>
                     {(() => {
                       const tempColors: Record<string, { bg: string; color: string }> = {
@@ -845,6 +1113,7 @@ function BatchUploadPanel({
                           value={row.tempZone}
                           onChange={(e) => updateCell(row.id, 'tempZone', e.target.value)}
                           style={tc ? { background: tc.bg, color: tc.color, borderColor: tc.bg, fontWeight: 700 } : {}}
+                          title={row.tempZone}
                         >
                           <option value="">选择</option>
                           <option value="冷冻">冷冻</option>
@@ -854,8 +1123,19 @@ function BatchUploadPanel({
                       )
                     })()}
                   </td>
-                  <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} /></td>
-                  <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" /></td>
+                  <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} title={String(row.qty)} /></td>
+                  <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" title={row.remark} /></td>
+                  <td><input className="batch-input" value={row.address} onChange={(e) => updateCell(row.id, 'address', e.target.value)} placeholder="选填" title={row.address} /></td>
+                  <td>
+                    <input
+                      type="date"
+                      className="batch-input"
+                      value={formatToDate(row.date)}
+                      onChange={(e) => updateCell(row.id, 'date', e.target.value)}
+                      title={row.date}
+                      style={{ height: '30px', padding: '0 8px', boxSizing: 'border-box' }}
+                    />
+                  </td>
                   <td>
                     <button onClick={() => deleteRow(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', fontSize: 16, padding: '4px' }}>✕</button>
                   </td>
