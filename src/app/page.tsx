@@ -31,10 +31,10 @@ interface PrintLabel {
   printDate: string
 }
 
-const TEMP_ICONS: Record<string, string> = {
-  '冷冻': '🧊',
-  '冷藏': '🧊',
-  '常温': '📦',
+const TEMP_ICONS: Record<string, React.ReactNode> = {
+  '冷冻': <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 1v14M1 8h14M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  '冷藏': <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="7" y="1" width="2" height="8" rx="1" fill="currentColor"/><circle cx="8" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.3" fill="none"/><circle cx="8" cy="12" r="1" fill="currentColor"/><path d="M8 1v2M5.5 2l1 1.5M10.5 2l-1 1.5" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round"/></svg>,
+  '常温': <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><circle cx="8" cy="8" r="2.5" fill="currentColor" opacity="0.8"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2M3.5 3.5l1.5 1.5M11 11l1.5 1.5M12.5 3.5L11 5M3.5 12.5L5 11" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>,
 }
 
 const TEMP_LIST = ['冷冻', '冷藏', '常温'] as const
@@ -187,6 +187,7 @@ ${html}
 export default function Home() {
   const [stores, setStores] = useState<Store[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
+  const [allContacts, setAllContacts] = useState<Contact[]>([])
   const [selectedStoreId, setSelectedStoreId] = useState('')
   const [selectedContactId, setSelectedContactId] = useState('')
   const [quantities, setQuantities] = useState<Record<string, number>>({
@@ -228,7 +229,10 @@ export default function Home() {
     }
   }, [])
 
-  useEffect(() => { fetchStores() }, [fetchStores])
+  useEffect(() => {
+    fetchStores()
+    fetch('/api/contacts').then(res => res.json()).then(data => setAllContacts(data)).catch(() => {})
+  }, [fetchStores])
 
   useEffect(() => {
     if (selectedStoreId) {
@@ -337,24 +341,37 @@ export default function Home() {
         </div>
 
         {/* Tab Switcher */}
-        <div className="tab-switcher fade-in-up" style={{ animationDelay: '0.05s' }}>
-          <button
-            className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
-            onClick={() => setActiveTab('single')}
-          >
-            📋 单件新建
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
-            onClick={() => setActiveTab('batch')}
-          >
-            📊 批量新建
-          </button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+          <div className="tab-switcher fade-in-up" style={{ animationDelay: '0.05s' }}>
+            <button
+              className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
+              onClick={() => setActiveTab('single')}
+            >
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
+                <path d="M4 2h8v12H4V2z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                <path d="M6 5h4M6 8h4M6 11h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+              单次新建
+            </button>
+            <button
+              className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
+              onClick={() => setActiveTab('batch')}
+            >
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
+                <rect x="2" y="2" width="4" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+                <rect x="6.5" y="4" width="4" height="3" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" opacity="0.6"/>
+                <rect x="11" y="2" width="3" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" opacity="0.35"/>
+                <rect x="2.5" y="9" width="4.5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" opacity="0.6"/>
+                <rect x="8" y="9" width="3.5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" fill="none" opacity="0.35"/>
+              </svg>
+              批量上传
+            </button>
+          </div>
         </div>
 
         {activeTab === 'single' && (
           <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
-            <h2 className="card-title"><span className="icon">📋</span>面单信息</h2>
+            <h2 className="card-title"><span className="icon"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M4 3h8v10H4V3z" stroke="white" strokeWidth="1.5" fill="none"/><path d="M6 6h4M6 9h3" stroke="white" strokeWidth="1.2" strokeLinecap="round"/></svg></span>面单信息</h2>
 
             <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
               <div className="field-group">
@@ -444,6 +461,7 @@ export default function Home() {
             batchLoading={batchLoading}
             setBatchLoading={setBatchLoading}
             stores={stores}
+            contacts={allContacts}
           />
         )}
 
@@ -465,6 +483,7 @@ interface BatchRow {
   tempZone: string
   qty: number
   remark: string
+  address: string
 }
 
 // Validate a single row, return error messages
@@ -472,7 +491,9 @@ function validateRow(row: BatchRow): string[] {
   const errs: string[] = []
   if (!row.store?.trim()) errs.push('门店为空')
   if (!row.contact?.trim()) errs.push('收货人为空')
-  if (!row.phone?.trim()) errs.push('电话为空')
+  const phone = row.phone?.trim()
+  if (!phone) errs.push('电话为空')
+  else if (!/^1[3-9]\d{9}$/.test(phone)) errs.push(`电话"${phone}"格式不正确（需11位手机号）`)
   if (!row.date?.trim()) errs.push('日期为空')
   if (!row.tempZone?.trim()) errs.push('温区为空')
   else if (!['冷冻', '冷藏', '常温'].includes(row.tempZone.trim())) errs.push(`温区"${row.tempZone}"无效`)
@@ -486,10 +507,11 @@ interface BatchUploadPanelProps {
   batchLoading: boolean
   setBatchLoading: (loading: boolean) => void
   stores: Store[]
+  contacts: Contact[]
 }
 
 function BatchUploadPanel({
-  fileInputRef, batchLoading, setBatchLoading, stores,
+  fileInputRef, batchLoading, setBatchLoading, stores, contacts,
 }: BatchUploadPanelProps) {
   const [rows, setRows] = useState<BatchRow[]>([])
   const [showEditor, setShowEditor] = useState(false)
@@ -501,8 +523,7 @@ function BatchUploadPanel({
     const actualPrintDate = nowStr()
     validRows.forEach((row) => {
       const total = row.qty
-      const matchedStore = stores.find((s) => s.name === row.store.trim())
-      const storeAddress = matchedStore?.address || null
+      const storeAddress = row.address || null
       for (let j = 1; j <= total; j++) {
         labels.push({
           storeName: row.store.trim(),
@@ -549,23 +570,59 @@ function BatchUploadPanel({
         return
       }
 
+      // 兼容多种列名
+      const getVal = (r: Record<string, unknown>, ...keys: string[]): string => {
+        for (const k of keys) {
+          if (r[k] !== undefined && r[k] !== null && r[k] !== '') return String(r[k])
+        }
+        return ''
+      }
+
+      // 检查必需列是否存在
+      const sampleRow = rawRows[0]
+      const allKeys = Object.keys(sampleRow)
+      const missingCols: string[] = []
+      const colMap: Record<string, string[]> = {
+        '门店': ['门店', '门店名称', 'store'],
+        '收货人': ['收货人', '联系人', '姓名', 'contact'],
+        '电话': ['电话', '联系电话', '手机', '联系方式', 'phone'],
+        '日期': ['日期', '时间', 'date'],
+        '温区': ['温区', '温层', '温度'],
+        '总件数': ['总件数', '件数', '数量', 'qty'],
+      }
+      for (const [field, keys] of Object.entries(colMap)) {
+        if (!keys.some(k => allKeys.includes(k))) {
+          missingCols.push(`${field}(可能的列名: ${keys.join('/')})`)
+        }
+      }
+      if (missingCols.length > 0) {
+        setParseError(`缺少必需列：\n${missingCols.join('\n')}\n\n检测到的列：${allKeys.join(', ')}`)
+        setBatchLoading(false)
+        return
+      }
+
       const parsedRows: BatchRow[] = rawRows.map((r, i) => {
         let dateStr = ''
-        const dv = r['日期']
-        if (typeof dv === 'number') {
-          dateStr = excelDateToString(dv)
+        const dv = getVal(r, '日期', '时间', 'date')
+        if (/^\d+(\.\d+)?$/.test(dv)) {
+          dateStr = excelDateToString(Number(dv))
         } else if (dv) {
-          dateStr = String(dv)
+          dateStr = dv
         }
+        const phoneRaw = getVal(r, '电话', '联系电话', '手机', '联系方式', 'phone')
+        const storeName = getVal(r, '门店', '门店名称', 'store').trim()
+        const matchedStore = stores.find((s) => s.name === storeName)
+        const matchedContact = contacts.find((c) => c.name === getVal(r, '收货人', '联系人', '姓名', 'contact').trim())
         return {
           id: i,
-          store: String(r['门店'] || '').trim(),
-          contact: String(r['收货人'] || '').trim(),
-          phone: String(r['电话'] || '').replace(/\.0$/, '').trim(),
+          store: storeName,
+          contact: getVal(r, '收货人', '联系人', '姓名', 'contact').trim(),
+          phone: phoneRaw.replace(/\.0$/, '').trim() || (matchedContact?.phone ?? ''),
           date: dateStr,
-          tempZone: String(r['温区'] || '').trim(),
-          qty: Number(r['总件数']) || 0,
-          remark: String(r['备注'] || '').trim(),
+          tempZone: getVal(r, '温区', '温层', '温度').trim(),
+          qty: Number(getVal(r, '总件数', '件数', '数量', 'qty')) || 0,
+          remark: getVal(r, '备注', 'remark').trim(),
+          address: matchedStore?.address || getVal(r, '地址', '门店地址').trim(),
         }
       })
 
@@ -592,6 +649,16 @@ function BatchUploadPanel({
     setRows(prev => prev.map(r => {
       if (r.id !== rowId) return r
       if (field === 'qty') return { ...r, qty: parseInt(value) || 0 }
+      if (field === 'store') {
+        // 门店变更时自动填充地址
+        const matchedStore = stores.find(s => s.name === value.trim())
+        return { ...r, store: value, address: matchedStore?.address || r.address }
+      }
+      if (field === 'contact') {
+        // 收货人变更时自动填充电话
+        const matchedContact = contacts.find(c => c.name === value.trim())
+        return { ...r, contact: value, phone: matchedContact?.phone || r.phone }
+      }
       return { ...r, [field]: value }
     }))
   }
@@ -605,7 +672,7 @@ function BatchUploadPanel({
   const addRow = () => {
     setRows(prev => [...prev, {
       id: Math.max(...prev.map(r => r.id), -1) + 1,
-      store: '', contact: '', phone: '', date: nowStr(), tempZone: '', qty: 1, remark: '',
+      store: '', contact: '', phone: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
     }])
   }
 
@@ -632,25 +699,57 @@ function BatchUploadPanel({
   if (!showEditor) {
     return (
       <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
-        <h2 className="card-title"><span className="icon">📊</span>批量上传</h2>
+        <h2 className="card-title"><span className="icon"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="2" y="2" width="4" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none"/><rect x="6.5" y="4" width="4" height="3" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="11" y="2" width="3" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/><rect x="2.5" y="9" width="4.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="8" y="9" width="3.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/></svg></span>批量上传</h2>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
-          <div className="print-hint" style={{ background: '#E0F2FE', borderColor: '#7DD3FC', color: '#075985', margin: 0, flex: 1 }}>
-            📋 按模板格式填写后上传，所有字段必填，支持 <code>.xls</code> / <code>.xlsx</code>
+          <div className="print-hint" style={{ background: '#E0F2FE', borderColor: '#7DD3FC', color: '#075985', margin: 0, flex: 1, fontSize: 12 }}>
+            📋 上传Excel或直接新建，所有字段必填
           </div>
-          <a href="/批量模板.xls" download="批量模板.xls" className="btn btn--secondary" style={{ padding: '10px 16px', fontSize: 13, whiteSpace: 'nowrap', flexShrink: 0 }}>
-            📥 下载模板
-          </a>
+          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            <a href="/批量模板.xls" download="批量模板.xls" className="nav-pill" style={{ textDecoration: 'none', gap: 4 }}>
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
+                <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 12v2h12v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              模板
+            </a>
+            <button
+              className="nav-pill active"
+              style={{ border: 'none', cursor: 'pointer', font: 'inherit', gap: 4 }}
+              onClick={() => {
+                setRows([{
+                  id: 0, store: '', contact: '', phone: '', date: nowStr(),
+                  tempZone: '', qty: 1, remark: '', address: '',
+                }])
+                setShowEditor(true)
+              }}
+            >
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
+                <path d="M10 3l3 3-7 7-3 0 0-3 7-7z" stroke="white" strokeWidth="1.3" strokeLinejoin="round" fill="none"/>
+                <path d="M9 4l3 3" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
+              新建
+            </button>
+          </div>
         </div>
 
-        <div style={{ border: '2px dashed var(--card-border)', borderRadius: 12, padding: '40px 24px', textAlign: 'center', transition: 'border-color 0.2s' }}>
+        <div
+          onClick={() => !batchLoading && fileInputRef.current?.click()}
+          style={{
+            border: '2px dashed var(--card-border)', borderRadius: 12,
+            padding: '48px 24px', textAlign: 'center', transition: 'border-color 0.2s',
+            cursor: batchLoading ? 'wait' : 'pointer',
+          }}
+          onMouseEnter={(e) => { if (!batchLoading) e.currentTarget.style.borderColor = 'var(--primary)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--card-border)' }}
+        >
           <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
-          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>点击选择Excel文件</div>
+          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>点击选择或拖拽Excel文件</div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>上传后可在线编辑、校验</div>
           <input ref={fileInputRef} type="file" accept=".xls,.xlsx" onChange={handleFileChange} style={{ display: 'none' }} />
-          <button className="btn btn--secondary" onClick={() => fileInputRef.current?.click()} disabled={batchLoading} style={{ padding: '10px 24px' }}>
+          <span className="btn btn--primary" style={{ padding: '10px 24px', pointerEvents: 'none' }}>
             {batchLoading ? '处理中...' : '选择文件'}
-          </button>
+          </span>
         </div>
 
         {parseError && (
@@ -667,7 +766,7 @@ function BatchUploadPanel({
     <div className="card fade-in-up" style={{ maxWidth: 1100, margin: '0 auto', animationDelay: '0.1s' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <h2 className="card-title" style={{ margin: 0 }}>
-          <span className="icon">📊</span>批量编辑
+          <span className="icon"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="2" y="2" width="4" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none"/><rect x="6.5" y="4" width="4" height="3" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="11" y="2" width="3" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/><rect x="2.5" y="9" width="4.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.8"/><rect x="8" y="9" width="3.5" height="5" rx="1" stroke="white" strokeWidth="1.3" fill="none" opacity="0.5"/></svg></span>批量编辑
         </h2>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn--secondary btn--sm" onClick={() => { setShowEditor(false); setRows([]) }}>重新上传</button>
@@ -691,18 +790,19 @@ function BatchUploadPanel({
       </div>
 
       {/* 可编辑表格 */}
-      <div style={{ overflowX: 'auto', border: '1px solid var(--card-border)', borderRadius: 8 }}>
-        <table className="batch-table">
+      <div style={{ overflowX: 'auto', border: '1px solid var(--card-border)', borderRadius: 8, minHeight: 170 }}>
+        <table className="batch-table" style={{ minHeight: 170 }}>
           <thead>
             <tr>
               <th style={{ width: 40 }}>#</th>
               <th>门店</th>
               <th>收货人</th>
               <th>电话</th>
+              <th>地址</th>
               <th style={{ width: 180 }}>日期</th>
               <th style={{ width: 90 }}>温区</th>
               <th style={{ width: 70 }}>件数</th>
-              <th style={{ width: 140 }}>备注</th>
+              <th style={{ width: 120 }}>备注</th>
               <th style={{ width: 40 }}></th>
             </tr>
           </thead>
@@ -711,19 +811,48 @@ function BatchUploadPanel({
               const errs = validateRow(row)
               const hasErr = errs.length > 0
               return (
-                <tr key={row.id} className={hasErr ? 'batch-row-error' : ''}>
-                  <td className="batch-row-num">{row.id + 1}</td>
-                  <td><input className="batch-input" value={row.store} onChange={(e) => updateCell(row.id, 'store', e.target.value)} /></td>
-                  <td><input className="batch-input" value={row.contact} onChange={(e) => updateCell(row.id, 'contact', e.target.value)} /></td>
+                <React.Fragment key={row.id}>
+                  <tr className={hasErr ? 'batch-row-error' : ''}>
+                    <td className="batch-row-num">{row.id + 1}</td>
+                  <td>
+                    <BatchCombobox
+                      value={row.store}
+                      onChange={(v) => updateCell(row.id, 'store', v)}
+                      options={stores.map(s => ({ value: s.name, label: s.name }))}
+                    />
+                  </td>
+                  <td>
+                    <BatchCombobox
+                      value={row.contact}
+                      onChange={(v) => updateCell(row.id, 'contact', v)}
+                      options={contacts.map(c => ({ value: c.name, label: c.name }))}
+                    />
+                  </td>
                   <td><input className="batch-input" value={row.phone} onChange={(e) => updateCell(row.id, 'phone', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.address} onChange={(e) => updateCell(row.id, 'address', e.target.value)} placeholder="选填" /></td>
                   <td><input className="batch-input" value={row.date} onChange={(e) => updateCell(row.id, 'date', e.target.value)} /></td>
                   <td>
-                    <select className="batch-input" value={row.tempZone} onChange={(e) => updateCell(row.id, 'tempZone', e.target.value)}>
-                      <option value="">选择</option>
-                      <option value="冷冻">冷冻</option>
-                      <option value="冷藏">冷藏</option>
-                      <option value="常温">常温</option>
-                    </select>
+                    {(() => {
+                      const tempColors: Record<string, { bg: string; color: string }> = {
+                        '冷冻': { bg: '#000', color: '#fff' },
+                        '冷藏': { bg: '#0891b2', color: '#fff' },
+                        '常温': { bg: '#65a30d', color: '#fff' },
+                      }
+                      const tc = tempColors[row.tempZone]
+                      return (
+                        <select
+                          className="batch-input batch-temp-select"
+                          value={row.tempZone}
+                          onChange={(e) => updateCell(row.id, 'tempZone', e.target.value)}
+                          style={tc ? { background: tc.bg, color: tc.color, borderColor: tc.bg, fontWeight: 700 } : {}}
+                        >
+                          <option value="">选择</option>
+                          <option value="冷冻">冷冻</option>
+                          <option value="冷藏">冷藏</option>
+                          <option value="常温">常温</option>
+                        </select>
+                      )
+                    })()}
                   </td>
                   <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} /></td>
                   <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" /></td>
@@ -731,8 +860,22 @@ function BatchUploadPanel({
                     <button onClick={() => deleteRow(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', fontSize: 16, padding: '4px' }}>✕</button>
                   </td>
                 </tr>
+                {hasErr && (
+                  <tr className="batch-error-row">
+                    <td colSpan={10}>
+                      <span className="batch-error-msg">⚠️ {errs.join('；')}</span>
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
               )
             })}
+            {/* 空行填充，保持表格高度 */}
+            {Array.from({ length: Math.max(0, 3 - rows.length) }, (_, i) => (
+              <tr key={`empty-${i}`} style={{ height: 44 }}>
+                <td colSpan={10} style={{ borderBottom: '1px solid var(--card-border)' }}></td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

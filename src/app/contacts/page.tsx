@@ -161,7 +161,7 @@ export default function ContactsPage() {
                         <th>地址</th>
                         <th>备注</th>
                         <th>所属门店</th>
-                        <th style={{ width: 100 }}>操作</th>
+                        <th style={{ width: 130 }}>操作</th>
                       </tr>
                     </thead>
                     <tbody>

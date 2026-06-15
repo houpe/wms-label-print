@@ -119,7 +119,7 @@ export default function StoresPage() {
                     <th>门店名称</th>
                     <th>地址</th>
                     <th>收货人</th>
-                    <th style={{ width: 100 }}>操作</th>
+                    <th style={{ width: 130 }}>操作</th>
                   </tr>
                 </thead>
                 <tbody>
