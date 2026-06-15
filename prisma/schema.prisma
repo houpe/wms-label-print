@@ -33,9 +33,9 @@ model Contact {
 model PrintOrder {
   id          String   @id @default(uuid())
   storeId     String
-  store       Store    @relation(fields: [storeId], references: [id])
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
   contactId   String
-  contact     Contact  @relation(fields: [contactId], references: [id])
+  contact     Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
   temperature String
   quantity    Int
   createdAt   DateTime @default(now())

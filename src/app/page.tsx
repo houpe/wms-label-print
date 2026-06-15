@@ -773,7 +773,7 @@ function validateRow(row: BatchRow): string[] {
 
 // Batch upload panel
 interface BatchUploadPanelProps {
-  fileInputRef: React.RefObject<HTMLInputElement>
+  fileInputRef: React.RefObject<HTMLInputElement | null>
   batchLoading: boolean
   setBatchLoading: (loading: boolean) => void
   stores: Store[]
