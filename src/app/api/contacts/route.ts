@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       name: body.name,
       phone: body.phone,
       address: body.address,
+      remark: body.remark,
       storeId: body.storeId,
     },
     include: { store: true },

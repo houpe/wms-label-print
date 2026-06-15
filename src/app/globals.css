@@ -685,3 +685,72 @@ body {
 }
 
 /* ====== Print (handled via new window, no CSS needed here) ====== */
+
+/* ====== Batch editable table ====== */
+.batch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--card);
+}
+.batch-table thead th {
+  background: var(--input-bg, #F8FAF8);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text);
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 2px solid var(--card-border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.batch-table tbody td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--card-border);
+  vertical-align: middle;
+}
+.batch-table tbody tr:hover td {
+  background: var(--input-bg, #F8FAF8);
+}
+.batch-row-num {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.batch-row-error td {
+  background: #FEF2F2 !important;
+}
+.batch-row-error:hover td {
+  background: #FEE2E2 !important;
+}
+.batch-row-error .batch-row-num {
+  color: #EF4444;
+}
+.batch-input {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--text);
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.batch-input:hover {
+  border-color: var(--card-border);
+}
+.batch-input:focus {
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(33,115,70,0.1);
+}
+select.batch-input {
+  cursor: pointer;
+}

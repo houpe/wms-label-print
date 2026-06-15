@@ -13,6 +13,7 @@ export async function PUT(
       name: body.name,
       phone: body.phone,
       address: body.address,
+      remark: body.remark,
     },
   })
   return NextResponse.json(contact)

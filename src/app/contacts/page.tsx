@@ -9,6 +9,7 @@ interface Contact {
   name: string
   phone: string
   address: string | null
+  remark: string | null
   storeId: string
   store?: Store
 }
@@ -21,6 +22,7 @@ export default function ContactsPage() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
+  const [remark, setRemark] = useState('')
   const [storeId, setStoreId] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -41,15 +43,15 @@ export default function ContactsPage() {
   useEffect(() => { fetchData() }, [fetchData])
 
   const openAdd = () => {
-    setEditing(null); setName(''); setPhone(''); setAddress(''); setStoreId('')
+    setEditing(null); setName(''); setPhone(''); setAddress(''); setRemark(''); setStoreId('')
     setModal('add')
   }
   const openEdit = (c: Contact) => {
-    setEditing(c); setName(c.name); setPhone(c.phone); setAddress(c.address || ''); setStoreId(c.storeId)
+    setEditing(c); setName(c.name); setPhone(c.phone); setAddress(c.address || ''); setRemark(c.remark || ''); setStoreId(c.storeId)
     setModal('edit')
   }
   const closeModal = () => {
-    setModal(null); setEditing(null); setName(''); setPhone(''); setAddress(''); setStoreId('')
+    setModal(null); setEditing(null); setName(''); setPhone(''); setAddress(''); setRemark(''); setStoreId('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,13 +60,13 @@ export default function ContactsPage() {
       await fetch(`/api/contacts/${editing.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, address }),
+        body: JSON.stringify({ name, phone, address, remark }),
       })
     } else {
       await fetch('/api/contacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, address, storeId }),
+        body: JSON.stringify({ name, phone, address, remark, storeId }),
       })
     }
     closeModal()
@@ -91,20 +93,23 @@ export default function ContactsPage() {
   return (
     <div className="app-root">
       <div className="bg-decoration"><div className="blob blob-1" /><div className="blob blob-2" /></div>
-      <div className="app-inner">
-        {/* Nav */}
-        <nav className="top-nav">
-          <Link href="/" className="nav-pill">打印面单</Link>
-          <span className="nav-dot" />
-          <Link href="/stores" className="nav-pill">门店管理</Link>
-          <span className="nav-dot" />
-          <Link href="/contacts" className="nav-pill active">收货人管理</Link>
-        </nav>
-
-        <div className="app-header fade-in-up">
-          <div className="logo-badge" style={{ marginBottom: 10 }}>WMS · 收货人</div>
-          <h1 className="app-title">收货人<em>管理</em></h1>
-          <p className="app-subtitle">管理各门店的收货人信息，共 {contacts.length} 位收货人</p>
+      <div className="app-inner" style={{ maxWidth: 1200 }}>
+        {/* Header */}
+        <div className="fade-in-up" style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 16, marginBottom: 16, flexWrap: 'wrap',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div className="logo-badge">WMS · 收货人</div>
+            <h1 className="app-title" style={{ fontSize: 22, margin: 0 }}>收货人<em>管理</em></h1>
+          </div>
+          <nav className="top-nav" style={{ margin: 0 }}>
+            <Link href="/" className="nav-pill">打印面单</Link>
+            <span className="nav-dot" />
+            <Link href="/stores" className="nav-pill">门店管理</Link>
+            <span className="nav-dot" />
+            <Link href="/contacts" className="nav-pill active">收货人管理</Link>
+          </nav>
         </div>
 
         <div className="card fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -154,6 +159,7 @@ export default function ContactsPage() {
                         <th>姓名</th>
                         <th>电话</th>
                         <th>地址</th>
+                        <th>备注</th>
                         <th>所属门店</th>
                         <th style={{ width: 100 }}>操作</th>
                       </tr>
@@ -163,9 +169,12 @@ export default function ContactsPage() {
                         <tr key={c.id}>
                           <td style={{ fontWeight: 600 }}>{c.name}</td>
                           <td style={{ color: 'var(--text-muted)' }}>{c.phone}</td>
-                          <td style={{ color: 'var(--text-muted)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {c.address || '—'}
-                          </td>
+                           <td style={{ color: 'var(--text-muted)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                             {c.address || '—'}
+                           </td>
+                           <td style={{ color: 'var(--text-muted)', maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                             {c.remark || '—'}
+                           </td>
                           <td>
                             <span className="badge badge--green">{c.store?.name || '—'}</span>
                           </td>
@@ -244,6 +253,15 @@ export default function ContactsPage() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="请输入地址（选填）"
+                  />
+                </div>
+                <div className="field-group" style={{ marginTop: 16 }}>
+                  <div className="field-label">备注</div>
+                  <input
+                    className="form-input"
+                    value={remark}
+                    onChange={(e) => setRemark(e.target.value)}
+                    placeholder="请输入备注（选填）"
                   />
                 </div>
               </div>

@@ -22,6 +22,7 @@ model Contact {
   name        String
   phone       String
   address     String?
+  remark      String?
   storeId     String
   store       Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
   printOrders PrintOrder[]

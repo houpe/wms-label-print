@@ -76,20 +76,23 @@ export default function StoresPage() {
   return (
     <div className="app-root">
       <div className="bg-decoration"><div className="blob blob-1" /><div className="blob blob-2" /></div>
-      <div className="app-inner">
-        {/* Nav */}
-        <nav className="top-nav">
-          <Link href="/" className="nav-pill">打印面单</Link>
-          <span className="nav-dot" />
-          <Link href="/stores" className="nav-pill active">门店管理</Link>
-          <span className="nav-dot" />
-          <Link href="/contacts" className="nav-pill">收货人管理</Link>
-        </nav>
-
-        <div className="app-header fade-in-up">
-          <div className="logo-badge" style={{ marginBottom: 10 }}>WMS · 门店</div>
-          <h1 className="app-title">门店<em>管理</em></h1>
-          <p className="app-subtitle">管理打印门店信息，共 {stores.length} 家门店</p>
+      <div className="app-inner" style={{ maxWidth: 1200 }}>
+        {/* Header */}
+        <div className="fade-in-up" style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 16, marginBottom: 16, flexWrap: 'wrap',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div className="logo-badge">WMS · 门店</div>
+            <h1 className="app-title" style={{ fontSize: 22, margin: 0 }}>门店<em>管理</em></h1>
+          </div>
+          <nav className="top-nav" style={{ margin: 0 }}>
+            <Link href="/" className="nav-pill">打印面单</Link>
+            <span className="nav-dot" />
+            <Link href="/stores" className="nav-pill active">门店管理</Link>
+            <span className="nav-dot" />
+            <Link href="/contacts" className="nav-pill">收货人管理</Link>
+          </nav>
         </div>
 
         <div className="card fade-in-up" style={{ animationDelay: '0.1s' }}>

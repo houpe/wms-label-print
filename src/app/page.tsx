@@ -21,12 +21,14 @@ interface PrintLabel {
   contactName: string
   contactPhone: string
   contactAddress: string | null
+  remark: string | null
   temperature: string
   totalInTemp: number
   indexInTemp: number
   date: string
   totalPrintCount: number
   printIndex: number
+  printDate: string
 }
 
 const TEMP_ICONS: Record<string, string> = {
@@ -70,18 +72,17 @@ function buildLabelHTML(label: PrintLabel): string {
   const phoneRest = label.contactPhone.slice(0, -4)
   return `
     <div class="label-item">
-      <div class="label-inner">
-        <div>
-          <div class="store-name">${label.storeName}</div>
-          <div class="info-row">收货人：${label.contactName}</div>
-          <div class="info-row">联系电话：${phoneRest}<span class="phone-tail">${phoneTail}</span></div>
-          ${label.contactAddress ? `<div class="info-row addr">地址：${label.contactAddress}</div>` : ''}
-        </div>
-        <div class="bottom-row">
-          <div class="date">日期：${label.date}</div>
-          <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};"> ${label.temperature} </div>
-          <div class="qty">${label.indexInTemp}/${label.totalInTemp}</div>
-        </div>
+      <div class="header-row">
+        <div class="print-date">打印：${label.printDate}</div>
+        <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};"> ${label.temperature} <span class="qty">${label.indexInTemp}/${label.totalInTemp}</span></div>
+      </div>
+      <div class="store-name">${label.storeName}</div>
+        <div class="info-group">
+        <div class="info-row">收货人：${label.contactName}</div>
+        <div class="info-row">电话：${phoneRest}<span class="phone-tail">${phoneTail}</span></div>
+        ${label.contactAddress ? `<div class="info-row addr">地址：${label.contactAddress}</div>` : ''}
+        ${label.remark ? `<div class="info-row addr">备注：${label.remark}</div>` : ''}
+        <div class="info-row date-inline">日期：${label.date}</div>
       </div>
     </div>`
 }
@@ -126,35 +127,37 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
     print-color-adjust: exact;
     font-family: SimHei, "Microsoft YaHei", sans-serif;
   }
-  .label-item {
-    width: 76mm; height: 133mm;
-    position: relative; overflow: visible;
-    page-break-after: always;
-  }
-  .label-item:last-child { page-break-after: auto; }
-  .label-inner {
-    position: absolute; top: 50%; left: 50%;
-    width: 133mm; height: 76mm;
-    margin-top: -38mm; margin-left: -66.5mm;
-    transform: rotate(90deg);
-    padding: 3mm;
-    display: flex; flex-direction: column; justify-content: space-between;
-  }
-  .store-name {
-    text-align: center; font-size: 26pt; font-weight: bold; color: #000;
-    margin-bottom: 2mm; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    border-bottom: 3px solid #217346; padding-bottom: 3px;
-  }
-  .info-row { font-size: 18pt; margin-bottom: 1mm; color: #000; font-weight: bold; line-height: 1.3; }
-  .info-row.addr { font-size: 15pt; }
-  .phone-tail { font-size: 20pt; }
-  .bottom-row { display: flex; align-items: center; justify-content: space-between; }
-  .date { font-size: 15pt; color: #000; font-weight: bold; white-space: nowrap; }
-  .temp-badge {
-    padding: 4px 16px; border-radius: 4px; font-weight: bold; font-size: 18pt;
-    display: inline-flex; align-items: center; white-space: nowrap;
-  }
-  .qty { font-size: 29pt; font-weight: bold; color: #000; }
+   .label-item {
+     width: 76mm; height: 133mm;
+     position: relative;
+     page-break-after: always;
+     padding: 10mm 3mm 15mm;
+     display: flex; flex-direction: column;
+   }
+   .label-item:last-child { page-break-after: auto; }
+   .header-row {
+     display: flex; align-items: center; justify-content: space-between;
+     margin-bottom: 3mm;
+   }
+   .print-date {
+     font-size: 7pt; color: #ccc;
+   }
+   .temp-badge {
+     padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 14pt;
+     display: inline-flex; align-items: center; white-space: nowrap;
+     margin-left: auto;
+   }
+   .qty { font-size: 16pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
+   .store-name {
+     text-align: center; font-size: 22pt; font-weight: bold; color: #000;
+     padding-bottom: 3mm; margin-bottom: 3mm;
+     border-bottom: 2px solid #217346;
+   }
+   .info-group { flex: 1; display: flex; flex-direction: column; gap: 1.5mm; }
+   .info-row { font-size: 16pt; color: #333; font-weight: 600; line-height: 1.35; }
+   .info-row.addr { font-size: 13pt; color: #444; font-weight: 500; line-height: 1.3; word-break: break-all; }
+   .info-row.date-inline { font-size: 13pt; color: #444; font-weight: 500; margin-top: auto; padding-top: 2mm; border-top: 1px solid #ccc; }
+   .phone-tail { font-size: 18pt; color: #333; }
 </style>
 </head>
 <body>
@@ -190,15 +193,14 @@ export default function Home() {
     '冷冻': 0, '冷藏': 0, '常温': 0,
   })
   const [activeTab, setActiveTab] = useState<'single' | 'batch'>('single')
-
   const [batchLoading, setBatchLoading] = useState(false)
-  const [batchError, setBatchError] = useState<string | null>(null)
-  const [batchLabels, setBatchLabels] = useState<PrintLabel[]>([])
-  const [batchSummary, setBatchSummary] = useState<{
-    totalRows: number
-    successRows: number
-  } | null>(null)
   const [printing, setPrinting] = useState(false)
+  const [printDate, setPrintDate] = useState(() => {
+    const now = new Date()
+    const pad = (n: number) => String(n).padStart(2, '0')
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`
+  })
+  const [remark, setRemark] = useState('')
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -260,7 +262,13 @@ export default function Home() {
     const contact = contacts.find((c) => c.id === selectedContactId)
     if (!store || !contact) return
 
-    const dateStr = nowStr()
+    // 用户选择的日期 + 当前时间
+    const d = new Date(printDate)
+    const dateStr = d.toLocaleString('zh-CN', {
+      year: '2-digit', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+    })
+    const actualPrintDate = nowStr()
     const labels: PrintLabel[] = []
     let printIdx = 0
     TEMP_LIST.forEach((temp) => {
@@ -271,13 +279,15 @@ export default function Home() {
           storeName: store.name,
           contactName: contact.name,
           contactPhone: contact.phone,
-          contactAddress: contact.address,
+          contactAddress: store.address,
+          remark: remark.trim() || null,
           temperature: temp,
           totalInTemp: count,
           indexInTemp: i,
           date: dateStr,
           totalPrintCount: totalQuantity,
           printIndex: printIdx,
+          printDate: actualPrintDate,
         })
       }
     })
@@ -330,13 +340,13 @@ export default function Home() {
         <div className="tab-switcher fade-in-up" style={{ animationDelay: '0.05s' }}>
           <button
             className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('single'); setBatchLabels([]); setBatchSummary(null); setBatchError(null) }}
+            onClick={() => setActiveTab('single')}
           >
             📋 单件新建
           </button>
           <button
             className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('batch'); setBatchLabels([]); setBatchSummary(null); setBatchError(null) }}
+            onClick={() => setActiveTab('batch')}
           >
             📊 批量新建
           </button>
@@ -346,7 +356,7 @@ export default function Home() {
           <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
             <h2 className="card-title"><span className="icon">📋</span>面单信息</h2>
 
-            <div className="form-grid">
+            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
               <div className="field-group">
                 <div className="field-label">
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 1L3 5.5V14h4V9.5h2V14h4V5.5L8 1z" fill="currentColor"/></svg></span>
@@ -368,6 +378,14 @@ export default function Home() {
                   {contacts.map((c) => (<option key={c.id} value={c.id}>{c.name} · {c.phone}</option>))}
                 </select>
               </div>
+
+              <div className="field-group">
+                <div className="field-label">
+                  <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.5"/></svg></span>
+                  日期
+                </div>
+                <input type="datetime-local" value={printDate} onChange={(e) => setPrintDate(e.target.value)} className="form-select" />
+              </div>
             </div>
 
             <div className="field-group" style={{ marginTop: 20 }}>
@@ -383,6 +401,19 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="field-group" style={{ marginTop: 20 }}>
+              <div className="field-label">
+                <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M3 3h10v8H5l-2 2V3z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/></svg></span>
+                备注
+              </div>
+              <input
+                className="form-input"
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
+                placeholder="请输入备注（选填）"
+              />
             </div>
 
             <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--surface-muted, #F8FAF8)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 14 }}>
@@ -411,13 +442,8 @@ export default function Home() {
           <BatchUploadPanel
             fileInputRef={fileInputRef}
             batchLoading={batchLoading}
-            batchError={batchError}
-            batchSummary={batchSummary}
-            batchLabels={batchLabels}
             setBatchLoading={setBatchLoading}
-            setBatchError={setBatchError}
-            setBatchSummary={setBatchSummary}
-            setBatchLabels={setBatchLabels}
+            stores={stores}
           />
         )}
 
@@ -429,112 +455,126 @@ export default function Home() {
   )
 }
 
+// Batch row data
+interface BatchRow {
+  id: number
+  store: string
+  contact: string
+  phone: string
+  date: string
+  tempZone: string
+  qty: number
+  remark: string
+}
+
+// Validate a single row, return error messages
+function validateRow(row: BatchRow): string[] {
+  const errs: string[] = []
+  if (!row.store?.trim()) errs.push('门店为空')
+  if (!row.contact?.trim()) errs.push('收货人为空')
+  if (!row.phone?.trim()) errs.push('电话为空')
+  if (!row.date?.trim()) errs.push('日期为空')
+  if (!row.tempZone?.trim()) errs.push('温区为空')
+  else if (!['冷冻', '冷藏', '常温'].includes(row.tempZone.trim())) errs.push(`温区"${row.tempZone}"无效`)
+  if (!row.qty || row.qty <= 0) errs.push('件数无效')
+  return errs
+}
+
 // Batch upload panel
 interface BatchUploadPanelProps {
   fileInputRef: React.RefObject<HTMLInputElement>
   batchLoading: boolean
-  batchError: string | null
-  batchSummary: { totalRows: number; successRows: number } | null
-  batchLabels: PrintLabel[]
   setBatchLoading: (loading: boolean) => void
-  setBatchError: (error: string | null) => void
-  setBatchSummary: (summary: { totalRows: number; successRows: number } | null) => void
-  setBatchLabels: (labels: PrintLabel[]) => void
+  stores: Store[]
 }
 
 function BatchUploadPanel({
-  fileInputRef, batchLoading, batchError, batchSummary, batchLabels,
-  setBatchLoading, setBatchError, setBatchSummary, setBatchLabels,
+  fileInputRef, batchLoading, setBatchLoading, stores,
 }: BatchUploadPanelProps) {
+  const [rows, setRows] = useState<BatchRow[]>([])
+  const [showEditor, setShowEditor] = useState(false)
+  const [parseError, setParseError] = useState<string | null>(null)
+
+  // 从行数据生成打印标签
+  const buildLabelsFromRows = useCallback((validRows: BatchRow[]): PrintLabel[] => {
+    const labels: PrintLabel[] = []
+    const actualPrintDate = nowStr()
+    validRows.forEach((row) => {
+      const total = row.qty
+      const matchedStore = stores.find((s) => s.name === row.store.trim())
+      const storeAddress = matchedStore?.address || null
+      for (let j = 1; j <= total; j++) {
+        labels.push({
+          storeName: row.store.trim(),
+          contactName: row.contact.trim(),
+          contactPhone: row.phone.trim(),
+          contactAddress: storeAddress,
+          remark: row.remark.trim() || null,
+          temperature: row.tempZone.trim(),
+          totalInTemp: total,
+          indexInTemp: j,
+          date: row.date.trim(),
+          totalPrintCount: 0,
+          printIndex: 0,
+          printDate: actualPrintDate,
+        })
+      }
+    })
+    const totalCount = labels.length
+    labels.forEach((l, idx) => {
+      l.totalPrintCount = totalCount
+      l.printIndex = idx + 1
+    })
+    return labels
+  }, [])
+
   const handleBatchFile = async (file: File) => {
     setBatchLoading(true)
-    setBatchError(null)
-    setBatchSummary(null)
-    setBatchLabels([])
+    setParseError(null)
 
     try {
-      const XLSX = (await import('xlsx')).default
+      const XLSX = await import('xlsx')
+      const xlsxLib = XLSX.default || XLSX
       const buffer = await file.arrayBuffer()
-      const wb = XLSX.read(buffer, { type: 'array', cellDates: false })
+      const wb = xlsxLib.read(buffer, { type: 'array', cellDates: false })
       const ws = wb.Sheets[wb.SheetNames[0]]
-      const rows: {
-        '门店'?: string; '收货人'?: string; '联系电话'?: number | string
-        '日期'?: number | string; '温区'?: string; '总件数'?: number
-      }[] = XLSX.utils.sheet_to_json(ws)
+      const rawRows: {
+        '门店'?: string; '收货人'?: string; '电话'?: number | string
+        '日期'?: number | string; '温区'?: string; '总件数'?: number; '备注'?: string
+      }[] = xlsxLib.utils.sheet_to_json(ws)
 
-      if (rows.length === 0) {
-        setBatchError('Excel文件为空，请检查模板')
+      if (rawRows.length === 0) {
+        setParseError('Excel文件为空，请检查模板')
         setBatchLoading(false)
         return
       }
 
-      const labels: PrintLabel[] = []
-      const errors: string[] = []
-
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i]
-        const rowNum = i + 2
-        const storeName = String(row['门店'] || '').trim()
-        const contactName = String(row['收货人'] || '').trim()
-        const phone = String(row['联系电话'] || '').trim()
-        const temp = String(row['温区'] || '').trim()
-        const total = Number(row['总件数'])
-        const dateValue = row['日期']
-
-        if (!storeName || !contactName || !phone || !temp || !total || total <= 0) {
-          errors.push(`第${rowNum}行：数据不完整`)
-          continue
+      const parsedRows: BatchRow[] = rawRows.map((r, i) => {
+        let dateStr = ''
+        const dv = r['日期']
+        if (typeof dv === 'number') {
+          dateStr = excelDateToString(dv)
+        } else if (dv) {
+          dateStr = String(dv)
         }
-        if (!['冷冻', '冷藏', '常温'].includes(temp)) {
-          errors.push(`第${rowNum}行：温区 "${temp}" 无效`)
-          continue
+        return {
+          id: i,
+          store: String(r['门店'] || '').trim(),
+          contact: String(r['收货人'] || '').trim(),
+          phone: String(r['电话'] || '').replace(/\.0$/, '').trim(),
+          date: dateStr,
+          tempZone: String(r['温区'] || '').trim(),
+          qty: Number(r['总件数']) || 0,
+          remark: String(r['备注'] || '').trim(),
         }
-
-        let dateStr: string
-        if (typeof dateValue === 'number') {
-          dateStr = excelDateToString(dateValue)
-        } else if (dateValue) {
-          dateStr = new Date(dateValue as string).toLocaleString('zh-CN', {
-            year: '2-digit', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
-          })
-        } else {
-          dateStr = nowStr()
-        }
-
-        const phoneStr = phone.replace(/\.0$/, '')
-
-        for (let j = 1; j <= total; j++) {
-          labels.push({
-            storeName, contactName, contactPhone: phoneStr,
-            contactAddress: null, temperature: temp,
-            totalInTemp: total, indexInTemp: j, date: dateStr,
-            totalPrintCount: 0, printIndex: 0,
-          })
-        }
-      }
-
-      // 第二遍：填入本次打印的序号和总数
-      const totalCount = labels.length
-      labels.forEach((l, idx) => {
-        l.totalPrintCount = totalCount
-        l.printIndex = idx + 1
       })
 
-      if (errors.length > 0) setBatchError(`以下行有问题，已跳过：\n${errors.join('\n')}`)
-
-      setBatchSummary({ totalRows: rows.length, successRows: rows.length - errors.length })
-      setBatchLabels(labels)
-
-      if (labels.length > 0) {
-        fetch('/api/print-orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ storeId: '', contactId: '', temperature: '批量上传', quantity: labels.length }),
-        }).catch(() => {})
-      }
-    } catch {
-      setBatchError('解析Excel文件失败，请检查文件格式')
+      setRows(parsedRows)
+      setShowEditor(true)
+    } catch (err) {
+      console.error('Excel解析失败:', err)
+      const msg = err instanceof Error ? err.message : String(err)
+      setParseError(`解析失败：${msg}`)
     } finally {
       setBatchLoading(false)
     }
@@ -547,51 +587,170 @@ function BatchUploadPanel({
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  return (
-    <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
-      <h2 className="card-title"><span className="icon">📊</span>批量上传</h2>
+  // 编辑单元格
+  const updateCell = (rowId: number, field: keyof BatchRow, value: string) => {
+    setRows(prev => prev.map(r => {
+      if (r.id !== rowId) return r
+      if (field === 'qty') return { ...r, qty: parseInt(value) || 0 }
+      return { ...r, [field]: value }
+    }))
+  }
 
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16,
-      }}>
-        <div className="print-hint" style={{ background: '#E0F2FE', borderColor: '#7DD3FC', color: '#075985', margin: 0, flex: 1 }}>
-          📋 按模板格式填写后上传，支持 <code>.xls</code> / <code>.xlsx</code>
-        </div>
-        <a href="/批量模板.xls" download="批量模板.xls" className="btn btn--secondary" style={{ padding: '10px 16px', fontSize: 13, whiteSpace: 'nowrap', flexShrink: 0 }}>
-          📥 下载模板
-        </a>
-      </div>
+  // 删除行
+  const deleteRow = (rowId: number) => {
+    setRows(prev => prev.filter(r => r.id !== rowId))
+  }
 
-      <div style={{ border: '2px dashed var(--card-border)', borderRadius: 12, padding: '40px 24px', textAlign: 'center', transition: 'border-color 0.2s' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
-        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>点击选择Excel文件</div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>支持 .xls 和 .xlsx 格式</div>
-        <input ref={fileInputRef} type="file" accept=".xls,.xlsx" onChange={handleFileChange} style={{ display: 'none' }} />
-        <button className="btn btn--secondary" onClick={() => fileInputRef.current?.click()} disabled={batchLoading} style={{ padding: '10px 24px' }}>
-          {batchLoading ? '处理中...' : '选择文件'}
-        </button>
-      </div>
+  // 添加空行
+  const addRow = () => {
+    setRows(prev => [...prev, {
+      id: Math.max(...prev.map(r => r.id), -1) + 1,
+      store: '', contact: '', phone: '', date: nowStr(), tempZone: '', qty: 1, remark: '',
+    }])
+  }
 
-      {batchError && (
-        <div style={{ marginTop: 16, padding: '12px 16px', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 8, color: '#991B1B', fontSize: 13, whiteSpace: 'pre-line' }}>
-          ⚠️ {batchError}
-        </div>
-      )}
+  // 统计校验
+  const rowErrors = rows.map(r => ({ id: r.id, errs: validateRow(r) }))
+  const errorCount = rowErrors.filter(r => r.errs.length > 0).length
+  const validRows = rows.filter(r => validateRow(r).length === 0)
+  const totalLabels = validRows.reduce((sum, r) => sum + r.qty, 0)
 
-      {batchSummary && (
-        <div style={{ marginTop: 16, padding: '16px 20px', background: 'var(--primary-10, #E8F5EC)', border: '1px solid var(--primary)', borderRadius: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 24 }}>✅</span>
-            <strong style={{ color: 'var(--primary)', fontSize: 15 }}>解析成功！</strong>
+  const handlePrint = () => {
+    if (errorCount > 0) return
+    const labels = buildLabelsFromRows(validRows)
+    if (labels.length === 0) return
+    printLabels(labels)
+
+    fetch('/api/print-orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ storeId: '', contactId: '', temperature: '批量上传', quantity: labels.length }),
+    }).catch(() => {})
+  }
+
+  // 上传区域
+  if (!showEditor) {
+    return (
+      <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
+        <h2 className="card-title"><span className="icon">📊</span>批量上传</h2>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
+          <div className="print-hint" style={{ background: '#E0F2FE', borderColor: '#7DD3FC', color: '#075985', margin: 0, flex: 1 }}>
+            📋 按模板格式填写后上传，所有字段必填，支持 <code>.xls</code> / <code>.xlsx</code>
           </div>
-          <div style={{ fontSize: 14 }}>
-            共 <strong>{batchSummary.totalRows}</strong> 行，有效 <strong style={{ color: 'var(--primary)' }}>{batchSummary.successRows}</strong> 行，生成 <strong style={{ color: 'var(--primary)' }}>{batchLabels.length}</strong> 张面单
-          </div>
-          <button className="btn btn--primary btn--full" style={{ marginTop: 16 }} onClick={() => printLabels(batchLabels)} disabled={batchLabels.length === 0}>
-            🖨 立即打印 ({batchLabels.length} 张)
+          <a href="/批量模板.xls" download="批量模板.xls" className="btn btn--secondary" style={{ padding: '10px 16px', fontSize: 13, whiteSpace: 'nowrap', flexShrink: 0 }}>
+            📥 下载模板
+          </a>
+        </div>
+
+        <div style={{ border: '2px dashed var(--card-border)', borderRadius: 12, padding: '40px 24px', textAlign: 'center', transition: 'border-color 0.2s' }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
+          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>点击选择Excel文件</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>上传后可在线编辑、校验</div>
+          <input ref={fileInputRef} type="file" accept=".xls,.xlsx" onChange={handleFileChange} style={{ display: 'none' }} />
+          <button className="btn btn--secondary" onClick={() => fileInputRef.current?.click()} disabled={batchLoading} style={{ padding: '10px 24px' }}>
+            {batchLoading ? '处理中...' : '选择文件'}
           </button>
         </div>
-      )}
+
+        {parseError && (
+          <div style={{ marginTop: 16, padding: '12px 16px', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 8, color: '#991B1B', fontSize: 13, whiteSpace: 'pre-line' }}>
+            ⚠️ {parseError}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // 编辑器界面
+  return (
+    <div className="card fade-in-up" style={{ maxWidth: 1100, margin: '0 auto', animationDelay: '0.1s' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <h2 className="card-title" style={{ margin: 0 }}>
+          <span className="icon">📊</span>批量编辑
+        </h2>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn--secondary btn--sm" onClick={() => { setShowEditor(false); setRows([]) }}>重新上传</button>
+          <button className="btn btn--secondary btn--sm" onClick={addRow}>+ 添加行</button>
+        </div>
+      </div>
+
+      {/* 统计栏 */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+        padding: '10px 16px', borderRadius: 8, marginBottom: 12, fontSize: 13,
+        background: errorCount > 0 ? '#FEF2F2' : 'var(--primary-10, #E8F5EC)',
+        border: `1px solid ${errorCount > 0 ? '#FECACA' : 'var(--primary)'}`,
+      }}>
+        <span style={{ color: errorCount > 0 ? '#991B1B' : 'var(--primary)' }}>
+          {errorCount > 0 ? `⚠️ 有 ${errorCount} 行数据有误，请修改` : '✅ 全部校验通过'}
+        </span>
+        <span style={{ color: 'var(--text-muted)' }}>
+          共 {rows.length} 行 · 有效 {validRows.length} 行 · 面单 {totalLabels} 张
+        </span>
+      </div>
+
+      {/* 可编辑表格 */}
+      <div style={{ overflowX: 'auto', border: '1px solid var(--card-border)', borderRadius: 8 }}>
+        <table className="batch-table">
+          <thead>
+            <tr>
+              <th style={{ width: 40 }}>#</th>
+              <th>门店</th>
+              <th>收货人</th>
+              <th>电话</th>
+              <th style={{ width: 180 }}>日期</th>
+              <th style={{ width: 90 }}>温区</th>
+              <th style={{ width: 70 }}>件数</th>
+              <th style={{ width: 140 }}>备注</th>
+              <th style={{ width: 40 }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const errs = validateRow(row)
+              const hasErr = errs.length > 0
+              return (
+                <tr key={row.id} className={hasErr ? 'batch-row-error' : ''}>
+                  <td className="batch-row-num">{row.id + 1}</td>
+                  <td><input className="batch-input" value={row.store} onChange={(e) => updateCell(row.id, 'store', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.contact} onChange={(e) => updateCell(row.id, 'contact', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.phone} onChange={(e) => updateCell(row.id, 'phone', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.date} onChange={(e) => updateCell(row.id, 'date', e.target.value)} /></td>
+                  <td>
+                    <select className="batch-input" value={row.tempZone} onChange={(e) => updateCell(row.id, 'tempZone', e.target.value)}>
+                      <option value="">选择</option>
+                      <option value="冷冻">冷冻</option>
+                      <option value="冷藏">冷藏</option>
+                      <option value="常温">常温</option>
+                    </select>
+                  </td>
+                  <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} /></td>
+                  <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" /></td>
+                  <td>
+                    <button onClick={() => deleteRow(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', fontSize: 16, padding: '4px' }}>✕</button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 底部操作 */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+        <button
+          className="btn btn--primary"
+          style={{ flex: 1, padding: '14px 24px', fontSize: 15 }}
+          onClick={handlePrint}
+          disabled={errorCount > 0 || totalLabels === 0}
+        >
+          🖨 打印（{totalLabels} 张）
+        </button>
+        <button className="btn btn--secondary" onClick={() => { setShowEditor(false); setRows([]) }}>
+          取消
+        </button>
+      </div>
     </div>
   )
 }
