@@ -5,6 +5,14 @@ import Link from 'next/link'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 
+// 清理门店名称：锅几锅几(xxx店) → xxx店
+const cleanStoreName = (name: string) => {
+  if (name.startsWith('锅几锅几')) {
+    return name.replace(/^锅几锅几[（(]?/, '').replace(/[）)]?$/, '').trim()
+  }
+  return name
+}
+
 interface Store {
   id: string
   cargoOwner: string
@@ -409,6 +417,14 @@ export default function Home() {
 
   const totalQuantity = Object.values(quantities).reduce((sum, q) => sum + q, 0)
 
+  // 清理门店名称：锅几锅几(xxx店) → xxx店
+  const cleanStoreName = (name: string) => {
+    if (name.startsWith('锅几锅几')) {
+      return name.replace(/^锅几锅几[（(]?/, '').replace(/[）)]?$/, '').trim()
+    }
+    return name
+  }
+
   // 从 stores 数据中提取所有货主
   const cargoOwners = useMemo(() => {
     const owners = new Set<string>()
@@ -422,11 +438,15 @@ export default function Home() {
     return stores.filter(s => s.cargoOwner === selectedCargoOwner)
   }, [stores, selectedCargoOwner])
 
+  // 获取当前选中门店
+  const selectedStore = useMemo(() => {
+    return stores.find(s => s.id === selectedStoreId) || null
+  }, [stores, selectedStoreId])
+
   // 获取当前选中门店的联系人（取第一个）
   const storeContact = useMemo(() => {
-    const store = stores.find(s => s.id === selectedStoreId)
-    return store?.contacts?.[0] || null
-  }, [stores, selectedStoreId])
+    return selectedStore?.contacts?.[0] || null
+  }, [selectedStore])
 
   const fetchStores = useCallback(async () => {
     const load = async (retries = 2): Promise<Store[] | null> => {
@@ -507,7 +527,7 @@ export default function Home() {
         printIdx++
         labels.push({
           cargoOwner: store.cargoOwner,
-          storeName: store.name,
+          storeName: cleanStoreName(store.name),
           contactName: storeContact.name,
           contactPhone: storeContact.phone,
           contactPhone2: storeContact.phone2 || null,
@@ -621,12 +641,12 @@ export default function Home() {
                 <SingleSearchableSelect
                   value={selectedStoreId}
                   onChange={handleStoreChange}
-                  options={filteredStores.map((s) => {
-                    const contact = s.contacts?.[0]
-                    const phones = contact ? [contact.phone, contact.phone2].filter(Boolean).join(' / ') : ''
-                    const contactInfo = contact ? ` - ${contact.name}(${phones})` : ''
-                    return { value: s.id, label: s.name + contactInfo }
-                  })}
+                   options={filteredStores.map((s) => {
+                     const contact = s.contacts?.[0]
+                     const phones = contact ? [contact.phone, contact.phone2].filter(Boolean).join(' / ') : ''
+                     const contactInfo = contact ? ` - ${contact.name}(${phones})` : ''
+                     return { value: s.id, label: cleanStoreName(s.name) + contactInfo }
+                   })}
                   placeholder="请选择门店"
                   isDisabled={!selectedCargoOwner}
                   instanceId="store-select"
@@ -639,6 +659,7 @@ export default function Home() {
                 <span style={{ fontSize: 13, color: '#166534' }}>
                   <strong>联系人：</strong>{storeContact.name}
                   {storeContact.phone2 ? ` · ${storeContact.phone} / ${storeContact.phone2}` : (storeContact.phone ? ` · ${storeContact.phone}` : '')}
+                  {selectedStore?.address ? ` · ${selectedStore.address}` : ''}
                 </span>
               </div>
             )}
@@ -866,7 +887,7 @@ function BatchUploadPanel({
       for (let j = 1; j <= total; j++) {
         labels.push({
           cargoOwner,
-          storeName: row.store.trim(),
+           storeName: cleanStoreName(row.store.trim()),
           contactName,
           contactPhone,
           contactPhone2,
@@ -888,7 +909,7 @@ function BatchUploadPanel({
       l.printIndex = idx + 1
     })
     return labels
-  }, [stores])
+  }, [stores, cleanStoreName])
 
   const handleBatchFile = async (file: File) => {
     setBatchLoading(true)
