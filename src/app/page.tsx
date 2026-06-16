@@ -516,11 +516,8 @@ export default function Home() {
     const store = stores.find((s) => s.id === selectedStoreId)
     if (!store) return
 
-    // 用户选择的日期 + 当前时间
-    const selectDate = new Date(printDate)
-    const now = new Date()
-    selectDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds())
-    const dateStr = selectDate.toLocaleString('zh-CN', {
+    // 日期就是打印时间
+    const dateStr = new Date().toLocaleString('zh-CN', {
       year: '2-digit', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
     })
@@ -670,21 +667,7 @@ export default function Home() {
               </div>
             )}
 
-            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr', marginTop: 16 }}>
-              <div className="field-group">
-                <div className="field-label">
-                  <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.5"/></svg></span>
-                  日期
-                </div>
-                <input
-                  type="date"
-                  value={printDate}
-                  onChange={(e) => setPrintDate(e.target.value)}
-                  className="form-select"
-                  style={{ height: '40px', padding: '0 14px', boxSizing: 'border-box' }}
-                />
-              </div>
-
+            <div className="form-grid" style={{ gridTemplateColumns: '1fr', marginTop: 16 }}>
               <div className="field-group">
                 <div className="field-label">
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M3 3h10v8H5l-2 2V3z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/></svg></span>
@@ -852,7 +835,6 @@ function validateRow(row: BatchRow): string[] {
   const errs: string[] = []
   if (!row.cargoOwner?.trim()) errs.push('货主为空')
   if (!row.store?.trim()) errs.push('门店为空')
-  if (!row.date?.trim()) errs.push('日期为空')
   if (!row.tempZone?.trim()) errs.push('温区为空')
   else if (!['冷冻', '冷藏', '常温'].includes(row.tempZone.trim())) errs.push(`温区"${row.tempZone}"无效`)
   if (!row.qty || row.qty <= 0) errs.push('件数无效')
@@ -902,7 +884,7 @@ function BatchUploadPanel({
           temperature: row.tempZone.trim(),
           totalInTemp: total,
           indexInTemp: j,
-          date: row.date.trim(),
+          date: new Date().toLocaleString('zh-CN', { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
           totalPrintCount: 0,
           printIndex: 0,
           printDate: actualPrintDate,
@@ -1177,7 +1159,6 @@ function BatchUploadPanel({
               <th style={{ width: 90, minWidth: 90 }}>温区</th>
               <th style={{ width: 70, minWidth: 70 }}>件数</th>
               <th style={{ minWidth: 120 }}>备注</th>
-              <th style={{ width: 130, minWidth: 130 }}>日期</th>
               <th style={{ minWidth: 120 }}>联系电话</th>
               <th style={{ minWidth: 200 }}>地址</th>
               <th style={{ width: 40, minWidth: 40 }}></th>
@@ -1238,16 +1219,6 @@ function BatchUploadPanel({
                   </td>
                   <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} title={String(row.qty)} /></td>
                   <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" title={row.remark} /></td>
-                  <td>
-                    <input
-                      type="date"
-                      className="batch-input"
-                      value={formatToDate(row.date)}
-                      onChange={(e) => updateCell(row.id, 'date', e.target.value)}
-                      title={row.date}
-                      style={{ height: '30px', padding: '0 8px', boxSizing: 'border-box' }}
-                    />
-                  </td>
                   <td>
                     <input
                       type="text"
