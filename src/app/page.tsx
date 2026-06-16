@@ -100,14 +100,24 @@ function buildLabelHTML(label: PrintLabel): string {
   const phones = [label.contactPhone, label.contactPhone2].filter((p): p is string => !!p)
   const phoneHtml = phones.map(renderPhone).join(' / ')
 
+  // 门店名自适应字体：根据长度计算合适的字号
+  const storeNameLen = label.storeName.length
+  let storeFontSize = 30
+  if (storeNameLen > 16) storeFontSize = Math.max(14, Math.round(30 * 16 / storeNameLen))
+
+  // 货主名自适应字体
+  const cargoOwnerLen = label.cargoOwner.length
+  let cargoFontSize = 30
+  if (cargoOwnerLen > 16) cargoFontSize = Math.max(14, Math.round(30 * 16 / cargoOwnerLen))
+
   return `
     <div class="label-item">
       <div class="header-row">
         <div class="print-date">打印：${label.printDate}</div>
         <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};"> ${label.temperature} <span class="qty">${label.indexInTemp}/${label.totalInTemp}</span></div>
       </div>
-      ${label.cargoOwner ? `<div class="cargo-owner">${label.cargoOwner}</div>` : ''}
-      <div class="store-name">${label.storeName}</div>
+      ${label.cargoOwner ? `<div class="cargo-owner" style="font-size:${cargoFontSize}pt">${label.cargoOwner}</div>` : ''}
+      <div class="store-name" style="font-size:${storeFontSize}pt">${label.storeName}</div>
         <div class="info-group">
         <div class="info-row">联系人：${label.contactName}</div>
         ${phones.length > 0 ? `<div class="info-row">电话：${phoneHtml}</div>` : ''}
