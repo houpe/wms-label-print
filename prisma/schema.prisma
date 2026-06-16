@@ -8,25 +8,16 @@ datasource db {
 }
 
 model Store {
-  id          String       @id @default(uuid())
-  cargoOwner  String
-  name        String
-  address     String?
-  contacts    Contact[]
-  printOrders PrintOrder[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model Contact {
-  id          String       @id @default(uuid())
-  name        String
-  phone       String
-  phone2      String?
-  storeId     String
-  store       Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id             String       @id @default(uuid())
+  cargoOwner     String
+  name           String
+  address        String?
+  contactName    String?
+  contactPhone   String?
+  contactPhone2  String?
+  printOrders    PrintOrder[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model PrintOrder {

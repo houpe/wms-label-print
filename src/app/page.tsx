@@ -597,7 +597,11 @@ export default function Home() {
                 <SingleSearchableSelect
                   value={selectedStoreId}
                   onChange={handleStoreChange}
-                  options={filteredStores.map((s) => ({ value: s.id, label: s.name }))}
+                  options={filteredStores.map((s) => {
+                    const contact = s.contacts?.[0]
+                    const contactInfo = contact ? ` - ${contact.name}(${contact.phone})` : ''
+                    return { value: s.id, label: s.name + contactInfo }
+                  })}
                   placeholder="请选择门店"
                   isDisabled={!selectedCargoOwner}
                   instanceId="store-select"
@@ -785,6 +789,7 @@ interface BatchRow {
   tempZone: string
   qty: number
   remark: string
+  contactPhone: string
   address: string
 }
 
@@ -915,12 +920,14 @@ function BatchUploadPanel({
         const cargoOwner = getVal(r, '货主', '货主名', 'owner', 'cargoOwner').trim()
         const storeName = getVal(r, '门店', '门店名称', 'store').trim()
         const matchedStore = stores.find((s) => s.cargoOwner === cargoOwner && s.name === storeName)
+        const storeContact = matchedStore?.contacts?.[0]
         return {
           id: i,
           cargoOwner,
           store: storeName,
           storeId: matchedStore?.id || '',
           address: matchedStore?.address || '',
+          contactPhone: getVal(r, '电话', '联系电话', 'phone').trim() || storeContact?.phone || '',
           date: dateStr,
           tempZone: getVal(r, '温区', '温层', '温度').trim(),
           qty: Number(getVal(r, '总件数', '件数', '数量', 'qty')) || 0,
@@ -956,9 +963,15 @@ function BatchUploadPanel({
         return { ...r, cargoOwner: value, store: '', storeId: '', address: '' }
       }
       if (field === 'store') {
-        // 门店变更时更新 storeId 和地址
         const matchedStore = stores.find(s => s.cargoOwner === r.cargoOwner && s.name === value.trim())
-        return { ...r, store: value, storeId: matchedStore?.id || '', address: matchedStore?.address || '' }
+        const c = matchedStore?.contacts?.[0]
+        return {
+          ...r,
+          store: value,
+          storeId: matchedStore?.id || '',
+          address: matchedStore?.address || '',
+          contactPhone: c?.phone || '',
+        }
       }
       return { ...r, [field]: value }
     }))
@@ -973,7 +986,7 @@ function BatchUploadPanel({
   const addRow = () => {
     setRows(prev => [...prev, {
       id: Math.max(...prev.map(r => r.id), -1) + 1,
-      cargoOwner: '', store: '', storeId: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
+      cargoOwner: '', store: '', storeId: '', contactPhone: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
     }])
   }
 
@@ -1019,7 +1032,7 @@ function BatchUploadPanel({
               style={{ border: 'none', cursor: 'pointer', font: 'inherit', gap: 4 }}
               onClick={() => {
                 setRows([{
-                  id: 0, cargoOwner: '', store: '', storeId: '', date: nowStr(),
+                  id: 0, cargoOwner: '', store: '', storeId: '', contactPhone: '', date: nowStr(),
                   tempZone: '', qty: 1, remark: '', address: '',
                 }])
                 setShowEditor(true)
@@ -1101,8 +1114,9 @@ function BatchUploadPanel({
               <th style={{ width: 90, minWidth: 90 }}>温区</th>
               <th style={{ width: 70, minWidth: 70 }}>件数</th>
               <th style={{ minWidth: 120 }}>备注</th>
-              <th style={{ minWidth: 200 }}>地址</th>
               <th style={{ width: 130, minWidth: 130 }}>日期</th>
+              <th style={{ minWidth: 120 }}>联系电话</th>
+              <th style={{ minWidth: 200 }}>地址</th>
               <th style={{ width: 40, minWidth: 40 }}></th>
             </tr>
           </thead>
@@ -1127,7 +1141,11 @@ function BatchUploadPanel({
                     <BatchCombobox
                       value={row.store}
                       onChange={(v) => updateCell(row.id, 'store', v)}
-                      options={filteredStores.map(s => ({ value: s.name, label: s.name }))}
+                      options={filteredStores.map(s => {
+                        const contact = s.contacts?.[0]
+                        const contactInfo = contact ? ` - ${contact.name}(${contact.phone})` : ''
+                        return { value: s.name, label: s.name + contactInfo }
+                      })}
                     />
                   </td>
                   <td>
@@ -1156,7 +1174,6 @@ function BatchUploadPanel({
                   </td>
                   <td><input type="number" className="batch-input" style={{ textAlign: 'center' }} value={row.qty} onChange={(e) => updateCell(row.id, 'qty', e.target.value)} title={String(row.qty)} /></td>
                   <td><input className="batch-input" value={row.remark} onChange={(e) => updateCell(row.id, 'remark', e.target.value)} placeholder="选填" title={row.remark} /></td>
-                  <td><input className="batch-input" value={row.address} onChange={(e) => updateCell(row.id, 'address', e.target.value)} placeholder="选填" title={row.address} /></td>
                   <td>
                     <input
                       type="date"
@@ -1168,12 +1185,23 @@ function BatchUploadPanel({
                     />
                   </td>
                   <td>
+                    <input
+                      type="text"
+                      className="batch-input"
+                      value={row.contactPhone}
+                      onChange={(e) => updateCell(row.id, 'contactPhone', e.target.value)}
+                      placeholder="电话号码"
+                      title={row.contactPhone}
+                    />
+                  </td>
+                  <td><input className="batch-input" value={row.address} onChange={(e) => updateCell(row.id, 'address', e.target.value)} placeholder="选填" title={row.address} /></td>
+                  <td>
                     <button onClick={() => deleteRow(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', fontSize: 16, padding: '4px' }}>✕</button>
                   </td>
                 </tr>
                 {hasErr && (
                   <tr className="batch-error-row">
-                    <td colSpan={10}>
+                    <td colSpan={11}>
                       <span className="batch-error-msg">⚠️ {errs.join('；')}</span>
                     </td>
                   </tr>
@@ -1184,7 +1212,7 @@ function BatchUploadPanel({
             {/* 空行填充，保持表格高度 */}
             {Array.from({ length: Math.max(0, 3 - rows.length) }, (_, i) => (
               <tr key={`empty-${i}`} style={{ height: 44 }}>
-                <td colSpan={10} style={{ borderBottom: '1px solid var(--card-border)' }}></td>
+                <td colSpan={11} style={{ borderBottom: '1px solid var(--card-border)' }}></td>
               </tr>
             ))}
           </tbody>

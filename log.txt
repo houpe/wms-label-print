@@ -629,3 +629,660 @@ Foreign key constraint violated: `foreign key`
  GET /stores 200 in 27ms (next.js: 7ms, application-code: 20ms)
  GET /api/stores 200 in 13ms (next.js: 8ms, application-code: 5ms)
  GET /api/stores 200 in 4ms (next.js: 1076µs, application-code: 3ms)
+ GET / 200 in 43ms (next.js: 18ms, application-code: 25ms)
+ GET /api/stores 200 in 14ms (next.js: 6ms, application-code: 8ms)
+ GET /api/contacts 200 in 9ms (next.js: 4ms, application-code: 5ms)
+ GET /api/stores 200 in 8ms (next.js: 1978µs, application-code: 6ms)
+ GET /api/contacts 200 in 7ms (next.js: 942µs, application-code: 7ms)
+ POST /api/print-orders 201 in 18ms (next.js: 4ms, application-code: 14ms)
+✓ Compiled in 2.4s
+ GET /api/stores 200 in 976ms (next.js: 838ms, application-code: 138ms)
+[browser] React has detected a change in the order of Hooks called by StoresPage. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+1. useState                   useState
+2. useState                   useState
+3. useState                   useState
+4. useState                   useState
+5. useState                   useState
+6. useState                   useState
+7. useState                   useState
+8. useState                   useState
+9. useState                   useState
+10. useState                  useState
+11. useState                  useState
+12. useState                  useState
+13. useState                  useState
+14. useState                  useState
+15. useState                  useState
+16. useState                  useState
+17. useCallback               useCallback
+18. useEffect                 useEffect
+19. undefined                 useMemo
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+    at updateHookTypesDev (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15461:13)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fstores%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:227:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+ GET / 200 in 1393ms (next.js: 642ms, application-code: 751ms)
+ GET /stores 200 in 1406ms (next.js: 510ms, application-code: 896ms)
+ GET / 200 in 231ms (next.js: 22ms, application-code: 210ms)
+ GET /stores 200 in 436ms (next.js: 38ms, application-code: 399ms)
+[browser] Uncaught Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4734:23)
+    at updateMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:5409:20)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15465:24)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fstores%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:227:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64)
+    at ClientPageRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_1e9_p6y._.js:4461:50)
+ GET /stores 200 in 114ms (next.js: 7ms, application-code: 107ms)
+ GET /stores 200 in 24ms (next.js: 5ms, application-code: 19ms)
+ GET /api/stores 200 in 7ms (next.js: 3ms, application-code: 4ms)
+ GET /api/stores 200 in 7ms (next.js: 3ms, application-code: 5ms)
+[browser] React has detected a change in the order of Hooks called by StoresPage. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+1. useState                   useState
+2. useState                   useState
+3. useState                   useState
+4. useState                   useState
+5. useState                   useState
+6. useState                   useState
+7. useState                   useState
+8. useState                   useState
+9. useState                   useState
+10. useState                  useState
+11. useState                  useState
+12. useState                  useState
+13. useState                  useState
+14. useState                  useState
+15. useState                  useState
+16. useState                  useState
+17. useCallback               useCallback
+18. useEffect                 useEffect
+19. undefined                 useMemo
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+    at updateHookTypesDev (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15461:13)
+    at exports.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fstores%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:227:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+[browser] Uncaught Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4734:23)
+    at updateMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:5409:20)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15465:24)
+    at exports.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fstores%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:227:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64)
+    at ClientPageRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_1e9_p6y._.js:4461:50)
+ GET /stores 200 in 47ms (next.js: 9ms, application-code: 38ms)
+ GET /api/stores 200 in 12ms (next.js: 4ms, application-code: 8ms)
+[browser] React has detected a change in the order of Hooks called by StoresPage. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+1. useState                   useState
+2. useState                   useState
+3. useState                   useState
+4. useState                   useState
+5. useState                   useState
+6. useState                   useState
+7. useState                   useState
+8. useState                   useState
+9. useState                   useState
+10. useState                  useState
+11. useState                  useState
+12. useState                  useState
+13. useState                  useState
+14. useState                  useState
+15. useState                  useState
+16. useState                  useState
+17. useCallback               useCallback
+18. useEffect                 useEffect
+19. undefined                 useMemo
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+    at updateHookTypesDev (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15461:13)
+    at exports.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js:228:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4587:25)
+[browser] Uncaught Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4734:23)
+    at updateMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:5409:20)
+    at Object.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15465:24)
+    at exports.useMemo (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:1742:36)
+    at StoresPage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/_04jzzpz._.js:228:198)
+    at Object.react_stack_bottom_frame (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_1amofcm._.js:2647:64)
+    at ClientPageRoot (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_1e9_p6y._.js:4461:50)
+[Server HMR] Update failed, full reload needed: SyntaxError: Identifier 'cargoOwners' has already been declared
+    at eval (<anonymous>)
+[Server HMR] Listener error: SyntaxError: Identifier 'cargoOwners' has already been declared
+    at eval (<anonymous>)
+✓ Compiled in 143ms
+⨯ ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  [90m155 |[0m   }
+  [90m156 |[0m
+[31m[1m>[0m [90m157 |[0m   [36mconst[0m cargoOwners = useMemo(() => {
+  [90m    |[0m         [31m[1m^^^^^^^^^^^[0m
+  [90m158 |[0m     [36mconst[0m set = [36mnew[0m [33mSet[0m<string>()
+  [90m159 |[0m     stores.forEach(s => { [36mif[0m (s.cargoOwner) set.add(s.cargoOwner) })
+  [90m160 |[0m     [36mreturn[0m [33mArray[0m.[36mfrom[0m(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component]
+
+
+⨯ ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  [90m155 |[0m   }
+  [90m156 |[0m
+[31m[1m>[0m [90m157 |[0m   [36mconst[0m cargoOwners = useMemo(() => {
+  [90m    |[0m         [31m[1m^^^^^^^^^^^[0m
+  [90m158 |[0m     [36mconst[0m set = [36mnew[0m [33mSet[0m<string>()
+  [90m159 |[0m     stores.forEach(s => { [36mif[0m (s.cargoOwner) set.add(s.cargoOwner) })
+  [90m160 |[0m     [36mreturn[0m [33mArray[0m.[36mfrom[0m(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component]
+
+
+ GET /stores 500 in 64ms (next.js: 28ms, application-code: 36ms)
+ GET /stores 500 in 68ms (next.js: 53ms, application-code: 15ms)
+[browser] Uncaught Error: ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/app/stores/page.tsx:157:9)
+    at <unknown> (Error: (./src/app/stores/page.tsx:157:9)
+[browser] Uncaught Error: ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/app/stores/page.tsx:157:9)
+    at <unknown> (Error: (./src/app/stores/page.tsx:157:9)
+[browser] ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component] 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component] 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component] 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/stores/page.tsx:157:9
+the name `cargoOwners` is defined multiple times
+  155 |   }
+  156 |
+> 157 |   const cargoOwners = useMemo(() => {
+      |         ^^^^^^^^^^^
+  158 |     const set = new Set<string>()
+  159 |     stores.forEach(s => { if (s.cargoOwner) set.add(s.cargoOwner) })
+  160 |     return Array.from(set).sort()
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/app/stores/page.tsx [Client Component Browser]
+    ./src/app/stores/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/stores/page.tsx [Client Component SSR]
+    ./src/app/stores/page.tsx [Server Component] 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+✓ Compiled in 44ms
+ GET /stores 200 in 1652ms (next.js: 851ms, application-code: 801ms)
+ GET /stores 200 in 1526ms (next.js: 1090ms, application-code: 437ms)
+ GET /api/stores 200 in 261ms (next.js: 203ms, application-code: 58ms)
+ GET /api/stores 200 in 27ms (next.js: 4ms, application-code: 23ms)
+ GET /stores 200 in 38ms (next.js: 6ms, application-code: 32ms)
+✓ Compiled in 63ms
+ GET /api/stores 200 in 26ms (next.js: 5ms, application-code: 21ms)
+ GET /api/stores 200 in 29ms (next.js: 16ms, application-code: 13ms)
+✓ Compiled in 327ms
+ GET /api/stores 200 in 72ms (next.js: 47ms, application-code: 24ms)
+ GET /api/stores 200 in 72ms (next.js: 53ms, application-code: 19ms)
+ GET /stores 200 in 353ms (next.js: 141ms, application-code: 212ms)
+ GET /stores 200 in 352ms (next.js: 193ms, application-code: 159ms)
+ GET /stores 200 in 130ms (next.js: 54ms, application-code: 76ms)
+ GET /stores 200 in 60ms (next.js: 3ms, application-code: 56ms)
+ GET /stores 200 in 44ms (next.js: 3ms, application-code: 41ms)
+ GET /stores 200 in 44ms (next.js: 21ms, application-code: 23ms)
+ GET /stores 200 in 129ms (next.js: 3ms, application-code: 126ms)
+ GET / 200 in 114ms (next.js: 19ms, application-code: 95ms)
+ GET /stores 200 in 43ms (next.js: 4ms, application-code: 39ms)
+ GET /api/stores 200 in 7ms (next.js: 3ms, application-code: 4ms)
+ GET /stores 200 in 15ms (next.js: 5ms, application-code: 10ms)
+ GET /stores 200 in 14ms (next.js: 1520µs, application-code: 13ms)
+ GET / 200 in 23ms (next.js: 5ms, application-code: 18ms)
+ GET /api/stores 200 in 55ms (next.js: 3ms, application-code: 51ms)
+ GET /api/contacts 200 in 56ms (next.js: 49ms, application-code: 7ms)
+ GET /api/stores 200 in 9ms (next.js: 1784µs, application-code: 7ms)
+ GET /api/contacts 200 in 10ms (next.js: 4ms, application-code: 6ms)
+ GET /stores 200 in 25ms (next.js: 5ms, application-code: 20ms)
+ GET /api/stores 200 in 7ms (next.js: 3ms, application-code: 3ms)
+ GET /api/stores 200 in 6ms (next.js: 1303µs, application-code: 4ms)
+✓ Compiled in 325ms
+ GET /api/stores 200 in 62ms (next.js: 50ms, application-code: 12ms)
+ GET /api/stores 200 in 78ms (next.js: 56ms, application-code: 22ms)
+ GET /stores 200 in 320ms (next.js: 149ms, application-code: 172ms)
+ GET /stores 200 in 324ms (next.js: 105ms, application-code: 219ms)
+ GET /stores 200 in 112ms (next.js: 9ms, application-code: 103ms)
+ GET /stores 200 in 108ms (next.js: 19ms, application-code: 89ms)
+ GET /stores 200 in 71ms (next.js: 3ms, application-code: 68ms)
+ GET /stores 200 in 74ms (next.js: 22ms, application-code: 51ms)
+ GET / 200 in 53ms (next.js: 27ms, application-code: 26ms)
+ GET /api/stores 200 in 67ms (next.js: 6ms, application-code: 61ms)
+ GET /api/contacts 200 in 69ms (next.js: 61ms, application-code: 7ms)
+ GET /api/contacts 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/stores 200 in 11ms (next.js: 5ms, application-code: 6ms)
+ GET /stores 200 in 34ms (next.js: 7ms, application-code: 26ms)
+ GET /api/stores 200 in 6ms (next.js: 1776µs, application-code: 4ms)
+ GET /api/stores 200 in 5ms (next.js: 1747µs, application-code: 3ms)
+ GET / 200 in 188ms (next.js: 5ms, application-code: 183ms)
+ GET /api/stores 200 in 17ms (next.js: 4ms, application-code: 13ms)
+ GET /api/contacts 200 in 21ms (next.js: 9ms, application-code: 12ms)
+ POST /api/stores 201 in 24ms (next.js: 8ms, application-code: 16ms)
+ GET /api/stores 200 in 7ms (next.js: 1756µs, application-code: 5ms)
+ GET / 200 in 100ms (next.js: 6ms, application-code: 94ms)
+ GET /api/stores 200 in 22ms (next.js: 9ms, application-code: 14ms)
+ GET /api/contacts 200 in 23ms (next.js: 16ms, application-code: 7ms)
+ GET /api/contacts 200 in 11ms (next.js: 3ms, application-code: 9ms)
+ GET /api/stores 200 in 12ms (next.js: 5ms, application-code: 7ms)
+ POST /api/print-orders 201 in 37ms (next.js: 28ms, application-code: 9ms)
+ POST /api/print-orders 201 in 28ms (next.js: 12ms, application-code: 16ms)
+✓ Compiled in 110ms
+ GET /api/stores 200 in 22ms (next.js: 5ms, application-code: 17ms)
+ GET /api/contacts 200 in 24ms (next.js: 14ms, application-code: 10ms)
+ GET /api/contacts 200 in 27ms (next.js: 2ms, application-code: 25ms)
+ GET /api/stores 200 in 48ms (next.js: 4ms, application-code: 43ms)
+✓ Compiled in 50ms
+ GET /api/stores 200 in 16ms (next.js: 5ms, application-code: 11ms)
+ GET /api/contacts 200 in 17ms (next.js: 9ms, application-code: 7ms)
+ GET /api/stores 200 in 14ms (next.js: 7ms, application-code: 7ms)
+ GET /api/contacts 200 in 12ms (next.js: 5ms, application-code: 7ms)
+ GET /stores 200 in 29ms (next.js: 7ms, application-code: 21ms)
+ GET /api/stores 200 in 9ms (next.js: 5ms, application-code: 4ms)
+ GET /api/stores 200 in 4ms (next.js: 1083µs, application-code: 3ms)
+ GET / 200 in 33ms (next.js: 16ms, application-code: 17ms)
+ GET /api/stores 200 in 12ms (next.js: 7ms, application-code: 5ms)
+ GET /api/contacts 200 in 9ms (next.js: 4ms, application-code: 5ms)
+ GET /api/stores 200 in 9ms (next.js: 1418µs, application-code: 7ms)
+ GET /api/contacts 200 in 9ms (next.js: 5ms, application-code: 4ms)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./src/lib/prisma.ts}["prisma"].printOrder.create()` invocation in
+/Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/server/chunks/[root-of-the-server]__09qohus._.js:72:165
+
+  69 ;
+  70 async function POST(request) {
+  71     const body = await request.json();
+→ 72     const order = await {imported module ./src/lib/prisma.ts}["prisma"].printOrder.create(
+Foreign key constraint violated: `foreign key`
+    at <unknown> (src/app/api/print-orders/route.ts:6:41)
+    at async POST (src/app/api/print-orders/route.ts:6:17)
+  4 | export async function POST(request: NextRequest) {
+  5 |   const body = await request.json()
+> 6 |   const order = await prisma.printOrder.create({
+    |                                         ^
+  7 |     data: {
+  8 |       storeId: body.storeId,
+  9 |       temperature: body.temperature, {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'PrintOrder', field_name: 'foreign key' }
+}
+ POST /api/print-orders 500 in 134ms (next.js: 5ms, application-code: 129ms)
+ GET /stores 200 in 34ms (next.js: 7ms, application-code: 27ms)
+ GET /api/stores 200 in 6ms (next.js: 3ms, application-code: 3ms)
+ GET /api/stores 200 in 5ms (next.js: 1170µs, application-code: 3ms)
+ GET / 200 in 25ms (next.js: 6ms, application-code: 19ms)
+ GET /api/stores 200 in 10ms (next.js: 4ms, application-code: 6ms)
+ GET /api/contacts 200 in 9ms (next.js: 5ms, application-code: 5ms)
+ GET /api/contacts 200 in 7ms (next.js: 1182µs, application-code: 6ms)
+ GET /api/stores 200 in 8ms (next.js: 4ms, application-code: 4ms)
+ POST /api/print-orders 201 in 12ms (next.js: 3ms, application-code: 10ms)
+ GET /stores 200 in 93ms (next.js: 4ms, application-code: 89ms)
+ GET /api/stores 200 in 8ms (next.js: 3ms, application-code: 5ms)
+✓ Compiled in 81ms
+ GET /api/stores 200 in 38ms (next.js: 14ms, application-code: 24ms)
+ GET /api/stores 200 in 7ms (next.js: 2ms, application-code: 5ms)
+ GET /api/stores 200 in 12ms (next.js: 3ms, application-code: 9ms)
+ GET /api/stores 200 in 10ms (next.js: 1293µs, application-code: 8ms)
+✓ Compiled in 34ms
+ GET /stores 200 in 60ms (next.js: 7ms, application-code: 53ms)
+ GET /api/stores 200 in 8ms (next.js: 2ms, application-code: 6ms)
+ GET / 200 in 100ms (next.js: 23ms, application-code: 77ms)
+ GET /api/stores 200 in 16ms (next.js: 4ms, application-code: 12ms)
+ GET /api/contacts 200 in 17ms (next.js: 12ms, application-code: 6ms)
+ POST /api/print-orders 201 in 13ms (next.js: 3ms, application-code: 9ms)
+ GET /stores 200 in 29ms (next.js: 9ms, application-code: 20ms)
+ GET /api/stores 200 in 8ms (next.js: 3ms, application-code: 4ms)
+ GET /api/stores 200 in 4ms (next.js: 1244µs, application-code: 3ms)
+ GET / 200 in 24ms (next.js: 5ms, application-code: 19ms)
+ GET /api/stores 200 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET /api/contacts 200 in 9ms (next.js: 4ms, application-code: 5ms)
+ GET /api/stores 200 in 8ms (next.js: 1165µs, application-code: 6ms)
+ GET /api/contacts 200 in 9ms (next.js: 5ms, application-code: 4ms)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./src/lib/prisma.ts}["prisma"].printOrder.create()` invocation in
+/Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/server/chunks/[root-of-the-server]__09qohus._.js:72:165
+
+  69 ;
+  70 async function POST(request) {
+  71     const body = await request.json();
+→ 72     const order = await {imported module ./src/lib/prisma.ts}["prisma"].printOrder.create(
+Foreign key constraint violated: `foreign key`
+    at <unknown> (src/app/api/print-orders/route.ts:6:41)
+    at async POST (src/app/api/print-orders/route.ts:6:17)
+  4 | export async function POST(request: NextRequest) {
+  5 |   const body = await request.json()
+> 6 |   const order = await prisma.printOrder.create({
+    |                                         ^
+  7 |     data: {
+  8 |       storeId: body.storeId,
+  9 |       temperature: body.temperature, {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'PrintOrder', field_name: 'foreign key' }
+}
+ POST /api/print-orders 500 in 139ms (next.js: 11ms, application-code: 128ms)
+✓ Compiled in 74ms
+ GET /api/stores 200 in 28ms (next.js: 15ms, application-code: 13ms)
+ GET /api/contacts 200 in 28ms (next.js: 22ms, application-code: 7ms)
+✓ Compiled in 43ms
+ GET /api/stores 200 in 15ms (next.js: 6ms, application-code: 9ms)
+ GET /api/contacts 200 in 17ms (next.js: 9ms, application-code: 9ms)
+✓ Compiled in 114ms
+ GET /api/stores 200 in 29ms (next.js: 12ms, application-code: 17ms)
+ GET /api/contacts 200 in 27ms (next.js: 19ms, application-code: 7ms)
+ GET / 200 in 117ms (next.js: 9ms, application-code: 108ms)
+ GET /api/stores 200 in 13ms (next.js: 3ms, application-code: 10ms)
+ GET /api/contacts 200 in 13ms (next.js: 6ms, application-code: 7ms)
+✓ Compiled in 28ms
+ GET /api/stores 200 in 9ms (next.js: 2ms, application-code: 6ms)
+ GET /api/contacts 200 in 9ms (next.js: 5ms, application-code: 5ms)
+✓ Compiled in 86ms
+ GET /api/stores 200 in 22ms (next.js: 7ms, application-code: 15ms)
+ GET /api/contacts 200 in 43ms (next.js: 13ms, application-code: 30ms)
+✓ Compiled in 38ms
+ GET /api/stores 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /api/contacts 200 in 16ms (next.js: 7ms, application-code: 9ms)
+[browser] A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://react.dev/link/controlled-components 
+    at updateProperties (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:11212:82)
+    at commitUpdate (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:11894:9)
+    at runWithFiberInDEV (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at commitHostUpdate (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:7421:13)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8298:100)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8403:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8403:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8286:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8403:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8403:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8219:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8219:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106)
+    at commitMutationEffectsOnFiber (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8214:17)
+    at recursivelyTraverseMutationEffects (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8205:106) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:11212:82)
+ POST /api/print-orders 201 in 15ms (next.js: 4ms, application-code: 11ms)
+ POST /api/print-orders 201 in 12ms (next.js: 3ms, application-code: 9ms)
+✓ Compiled in 259ms
+ GET /api/stores 200 in 24ms (next.js: 11ms, application-code: 14ms)
+ GET /api/contacts 200 in 21ms (next.js: 11ms, application-code: 10ms)
+✓ Compiled in 131ms
+ GET /api/stores 200 in 17ms (next.js: 5ms, application-code: 12ms)
+ GET /api/contacts 200 in 17ms (next.js: 11ms, application-code: 6ms)
+ GET / 200 in 76ms (next.js: 11ms, application-code: 65ms)
+ GET /api/stores 200 in 10ms (next.js: 4ms, application-code: 6ms)
+ GET /api/contacts 200 in 6ms (next.js: 3ms, application-code: 3ms)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./src/lib/prisma.ts}["prisma"].printOrder.create()` invocation in
+/Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/server/chunks/[root-of-the-server]__09qohus._.js:72:165
+
+  69 ;
+  70 async function POST(request) {
+  71     const body = await request.json();
+→ 72     const order = await {imported module ./src/lib/prisma.ts}["prisma"].printOrder.create(
+Foreign key constraint violated: `foreign key`
+    at <unknown> (src/app/api/print-orders/route.ts:6:41)
+    at async POST (src/app/api/print-orders/route.ts:6:17)
+  4 | export async function POST(request: NextRequest) {
+  5 |   const body = await request.json()
+> 6 |   const order = await prisma.printOrder.create({
+    |                                         ^
+  7 |     data: {
+  8 |       storeId: body.storeId,
+  9 |       temperature: body.temperature, {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'PrintOrder', field_name: 'foreign key' }
+}
+ POST /api/print-orders 500 in 150ms (next.js: 4ms, application-code: 146ms)
+ GET / 200 in 87ms (next.js: 24ms, application-code: 63ms)
+ GET /api/stores 200 in 13ms (next.js: 3ms, application-code: 10ms)
+ GET /api/contacts 200 in 14ms (next.js: 8ms, application-code: 7ms)
+ GET /stores 200 in 47ms (next.js: 13ms, application-code: 34ms)
+ GET /api/stores 200 in 11ms (next.js: 4ms, application-code: 7ms)
+ GET /api/stores 200 in 8ms (next.js: 2ms, application-code: 5ms)
+ PUT /api/stores/61240deb-0231-4dc2-b37a-f93b199d8b25 200 in 800ms (next.js: 789ms, application-code: 11ms)
+ GET /api/stores 200 in 6ms (next.js: 2ms, application-code: 4ms)
+ PUT /api/stores/61240deb-0231-4dc2-b37a-f93b199d8b25 200 in 18ms (next.js: 8ms, application-code: 10ms)
+ GET /api/stores 200 in 9ms (next.js: 2ms, application-code: 7ms)

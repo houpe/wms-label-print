@@ -2,39 +2,53 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-
-interface Contact {
-  id: string
-  name: string
-  phone: string
-  phone2: string | null
-  storeId: string
-}
+import Select from 'react-select'
 
 interface Store {
   id: string
   cargoOwner: string
   name: string
   address: string | null
-  contacts: Contact[]
+  contacts: {
+    id: string
+    name: string
+    phone: string
+    phone2: string | null
+  }[]
+}
+
+type ModalMode = 'add' | 'edit' | null
+
+const selectStyles = {
+  control: (base: any) => ({
+    ...base, minHeight: '40px', borderRadius: 'var(--radius-sm, 8px)',
+    borderColor: 'var(--input-border, #CBD5C3)', borderWidth: '2px',
+    boxShadow: 'none', '&:hover': { borderColor: 'var(--input-focus, #217346)' },
+  }),
+  valueContainer: (base: any) => ({ ...base, padding: '0 10px' }),
+  input: (base: any) => ({ ...base, margin: '0', padding: '0' }),
+  singleValue: (base: any) => ({ ...base, color: 'var(--text, #1E293B)' }),
+  placeholder: (base: any) => ({ ...base, color: 'var(--text-muted, #64748B)' }),
+  menu: (base: any) => ({ ...base, fontSize: '15px', zIndex: 9999 }),
+  menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
+  dropdownIndicator: (base: any) => ({ ...base, padding: '4px' }),
+  clearIndicator: (base: any) => ({ ...base, padding: '4px' }),
 }
 
 export default function StoresPage() {
   const [stores, setStores] = useState<Store[]>([])
-  const [expandedStoreIds, setExpandedStoreIds] = useState<Set<string>>(new Set())
-  const [modal, setModal] = useState<'add' | 'edit' | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [filterCargoOwner, setFilterCargoOwner] = useState('')
+
+  const [modalMode, setModalMode] = useState<ModalMode>(null)
   const [editingStore, setEditingStore] = useState<Store | null>(null)
-  const [storeCargoOwner, setStoreCargoOwner] = useState('')
+
+  const [cargoOwner, setCargoOwner] = useState('')
   const [storeName, setStoreName] = useState('')
   const [storeAddress, setStoreAddress] = useState('')
-  const [loading, setLoading] = useState(true)
-
-  const [contactModal, setContactModal] = useState<'add' | 'edit' | null>(null)
-  const [editingContact, setEditingContact] = useState<Contact | null>(null)
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [contactPhone2, setContactPhone2] = useState('')
-  const [contactStoreId, setContactStoreId] = useState('')
 
   const fetchStores = useCallback(async () => {
     const res = await fetch('/print/api/stores')
@@ -45,109 +59,75 @@ export default function StoresPage() {
 
   useEffect(() => { fetchStores() }, [fetchStores])
 
-  const groupedStores = useMemo(() => {
-    const map = new Map<string, Store[]>()
-    stores.forEach((store) => {
-      const owner = store.cargoOwner || '未知货主'
-      if (!map.has(owner)) map.set(owner, [])
-      map.get(owner)!.push(store)
-    })
-    return Array.from(map.entries())
-  }, [stores])
+  const cargoOwners = useMemo(
+    () => Array.from(new Set(stores.map(s => s.cargoOwner).filter(Boolean))).sort(),
+    [stores],
+  )
 
-  const toggleExpand = (storeId: string) => {
-    setExpandedStoreIds(prev => {
-      const next = new Set(prev)
-      if (next.has(storeId)) { next.delete(storeId) } else { next.add(storeId) }
-      return next
-    })
+  const filteredStores = useMemo(
+    () => filterCargoOwner ? stores.filter(s => s.cargoOwner === filterCargoOwner) : stores,
+    [stores, filterCargoOwner],
+  )
+
+  const openAdd = () => {
+    setEditingStore(null)
+    setCargoOwner(''); setStoreName(''); setStoreAddress('')
+    setContactName(''); setContactPhone(''); setContactPhone2('')
+    setModalMode('add')
   }
 
-  const openAddStore = () => {
-    setEditingStore(null); setStoreCargoOwner(''); setStoreName(''); setStoreAddress('')
-    setModal('add')
+  const openEdit = (s: Store) => {
+    setEditingStore(s)
+    setCargoOwner(s.cargoOwner)
+    setStoreName(s.name)
+    setStoreAddress(s.address || '')
+    const c = s.contacts?.[0]
+    setContactName(c?.name || '')
+    setContactPhone(c?.phone || '')
+    setContactPhone2(c?.phone2 || '')
+    setModalMode('edit')
   }
 
-  const openEditStore = (store: Store) => {
-    setEditingStore(store); setStoreCargoOwner(store.cargoOwner); setStoreName(store.name); setStoreAddress(store.address || '')
-    setModal('edit')
+  const closeModal = () => {
+    setModalMode(null)
+    setEditingStore(null)
   }
 
-  const closeStoreModal = () => {
-    setModal(null); setEditingStore(null); setStoreCargoOwner(''); setStoreName(''); setStoreAddress('')
-  }
-
-  const handleStoreSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (editingStore) {
+    if (modalMode === 'edit' && editingStore) {
       await fetch(`/print/api/stores/${editingStore.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cargoOwner: storeCargoOwner, name: storeName, address: storeAddress }),
+        body: JSON.stringify({
+          cargoOwner, name: storeName, address: storeAddress,
+          contactName, contactPhone, contactPhone2: contactPhone2 || null,
+        }),
       })
     } else {
       await fetch('/print/api/stores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cargoOwner: storeCargoOwner, name: storeName, address: storeAddress }),
+        body: JSON.stringify({
+          cargoOwner, name: storeName, address: storeAddress,
+          contactName, contactPhone, contactPhone2: contactPhone2 || null,
+        }),
       })
     }
-    closeStoreModal()
+    closeModal()
     fetchStores()
   }
 
-  const handleDeleteStore = async (id: string) => {
-    if (!confirm('确定要删除这个门店吗？')) return
+  const handleDelete = async (id: string) => {
+    if (!confirm('删除门店会同时删除其收货人，确定？')) return
     await fetch(`/print/api/stores/${id}`, { method: 'DELETE' })
-    fetchStores()
-  }
-
-  const openAddContact = (storeId: string) => {
-    setEditingContact(null); setContactName(''); setContactPhone(''); setContactPhone2(''); setContactStoreId(storeId)
-    setContactModal('add')
-  }
-
-  const openEditContact = (contact: Contact) => {
-    setEditingContact(contact); setContactName(contact.name); setContactPhone(contact.phone); setContactPhone2(contact.phone2 || ''); setContactStoreId(contact.storeId)
-    setContactModal('edit')
-  }
-
-  const closeContactModal = () => {
-    setContactModal(null); setEditingContact(null); setContactName(''); setContactPhone(''); setContactPhone2(''); setContactStoreId('')
-  }
-
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (editingContact) {
-      await fetch(`/print/api/contacts/${editingContact.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: contactName, phone: contactPhone, phone2: contactPhone2 || null }),
-      })
-    } else {
-      await fetch('/print/api/contacts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: contactName, phone: contactPhone, phone2: contactPhone2 || null, storeId: contactStoreId }),
-      })
-    }
-    closeContactModal()
-    fetchStores()
-  }
-
-  const handleDeleteContact = async (id: string) => {
-    if (!confirm('确定要删除这个收货人吗？')) return
-    await fetch(`/print/api/contacts/${id}`, { method: 'DELETE' })
     fetchStores()
   }
 
   if (loading) {
     return (
       <div className="app-root">
-        <div className="bg-decoration">
-          <div className="blob blob-1" />
-          <div className="blob blob-2" />
-        </div>
+        <div className="bg-decoration"><div className="blob blob-1" /><div className="blob blob-2" /></div>
         <div className="app-inner" style={{ textAlign: 'center', paddingTop: 80 }}>
           <div style={{ color: 'var(--text-muted)' }}>加载中...</div>
         </div>
@@ -157,10 +137,7 @@ export default function StoresPage() {
 
   return (
     <div className="app-root">
-      <div className="bg-decoration">
-        <div className="blob blob-1" />
-        <div className="blob blob-2" />
-      </div>
+      <div className="bg-decoration"><div className="blob blob-1" /><div className="blob blob-2" /></div>
       <div className="app-inner" style={{ maxWidth: 1200 }}>
         <div className="fade-in-up" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -170,161 +147,101 @@ export default function StoresPage() {
             <div className="logo-badge">WMS · 门店</div>
             <h1 className="app-title" style={{ fontSize: 22, margin: 0 }}>门店<em>管理</em></h1>
           </div>
-          <nav className="top-nav" style={{ margin: 0 }}>
-            <Link href="/" className="nav-pill">打印面单</Link>
-            <span className="nav-dot" />
-            <Link href="/stores" className="nav-pill active">门店管理</Link>
-          </nav>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <nav className="top-nav" style={{ margin: 0 }}>
+              <Link href="/" className="nav-pill">打印面单</Link>
+              <span className="nav-dot" />
+              <Link href="/stores" className="nav-pill active">门店管理</Link>
+            </nav>
+            <div style={{ width: 200 }}>
+              <Select
+                instanceId="filter-owner"
+                isClearable
+                placeholder="筛选货主"
+                value={filterCargoOwner ? { value: filterCargoOwner, label: filterCargoOwner } : null}
+                onChange={(o) => setFilterCargoOwner(o?.value || '')}
+                options={cargoOwners.map(c => ({ value: c, label: c }))}
+                styles={selectStyles}
+                menuPortalTarget={typeof window !== 'undefined' ? document.body : null}
+              />
+            </div>
+            <button className="btn btn--primary btn--sm" onClick={openAdd}>+ 添加门店</button>
+          </div>
         </div>
 
         <div className="card fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <h2 className="card-title" style={{ margin: 0 }}>
-              <span className="icon">🏪</span>
-              门店列表
-            </h2>
-            <button className="btn btn--primary btn--sm" onClick={openAddStore}>
-              + 添加门店
-            </button>
-          </div>
-
-          {stores.length === 0 ? (
+          {filteredStores.length === 0 ? (
             <div className="empty-state">
               <div className="icon">🏪</div>
-              <p>暂无门店，点击右上角添加</p>
+              <p>{stores.length === 0 ? '暂无门店，点击右上角添加' : '当前货主下无门店'}</p>
             </div>
           ) : (
-            groupedStores.map(([cargoOwner, ownerStores]) => (
-              <div key={cargoOwner} style={{ marginBottom: 24 }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8,
-                  padding: '8px 12px',
-                  background: 'var(--primary)', color: 'white',
-                  borderRadius: 'var(--radius-sm, 8px)',
-                  fontSize: 14, fontWeight: 600,
-                }}>
-                  <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 4l6-3 6 3v8l-6 3-6-3V4z" stroke="white" strokeWidth="1.3" fill="none"/><path d="M2 4l6 3 6-3M8 7v7" stroke="white" strokeWidth="1.3"/></svg>
-                  货主：{cargoOwner}
-                  <span style={{ marginLeft: 'auto', fontSize: 12, opacity: 0.8 }}>{ownerStores.length} 个门店</span>
-                </div>
-                <div style={{ overflowX: 'auto' }}>
-                  <table className="data-table">
-                    <thead>
-                      <tr>
-                        <th style={{ width: 80 }}>展开</th>
-                        <th>门店名称</th>
-                        <th>地址</th>
-                        <th style={{ width: 100 }}>收货人数</th>
-                        <th style={{ width: 130 }}>操作</th>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th style={{ minWidth: 100 }}>货主</th>
+                    <th style={{ minWidth: 140 }}>门店</th>
+                    <th style={{ minWidth: 200 }}>地址</th>
+                    <th style={{ minWidth: 80 }}>收货人</th>
+                    <th style={{ minWidth: 120 }}>电话1</th>
+                    <th style={{ minWidth: 120 }}>电话2</th>
+                    <th style={{ width: 130 }}>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStores.map((s) => {
+                    const c = s.contacts?.[0]
+                    return (
+                      <tr key={s.id}>
+                        <td><span className="badge badge--green">{s.cargoOwner || '—'}</span></td>
+                        <td style={{ fontWeight: 600 }}>{s.name}</td>
+                        <td style={{ color: 'var(--text-muted)', maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.address || '—'}</td>
+                        <td style={{ fontWeight: 600 }}>{c?.name || '—'}</td>
+                        <td>{c?.phone || '—'}</td>
+                        <td style={{ color: 'var(--text-muted)' }}>{c?.phone2 || '—'}</td>
+                        <td>
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <button className="btn btn--secondary btn--sm" style={{ padding: '4px 10px' }} onClick={() => openEdit(s)}>编辑</button>
+                            <button className="btn btn--danger btn--sm" style={{ padding: '4px 10px' }} onClick={() => handleDelete(s.id)}>删除</button>
+                          </div>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {ownerStores.map((store) => (
-                        <React.Fragment key={store.id}>
-                          <tr>
-                            <td>
-                              <button
-                                onClick={() => toggleExpand(store.id)}
-                                style={{
-                                  background: 'none', border: 'none', cursor: 'pointer',
-                                  fontSize: '14px', color: 'var(--text-muted)', padding: '4px 8px',
-                                }}
-                              >
-                                {expandedStoreIds.has(store.id) ? '▼' : '▶'}
-                              </button>
-                            </td>
-                            <td style={{ fontWeight: 600 }}>{store.name}</td>
-                            <td style={{ color: 'var(--text-muted)' }}>{store.address || '—'}</td>
-                            <td>
-                              <span className="badge badge--blue">{store.contacts?.length || 0} 人</span>
-                            </td>
-                            <td>
-                              <div style={{ display: 'flex', gap: 4 }}>
-                                <button className="btn btn--secondary btn--sm" style={{ padding: '4px 10px' }} onClick={() => openEditStore(store)}>编辑</button>
-                                <button className="btn btn--danger btn--sm" style={{ padding: '4px 10px' }} onClick={() => handleDeleteStore(store.id)}>删除</button>
-                              </div>
-                            </td>
-                          </tr>
-                          {expandedStoreIds.has(store.id) && (
-                            <tr style={{ background: 'var(--bg-muted, #F8FAF8)' }}>
-                              <td colSpan={5} style={{ padding: '16px 24px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                                  <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0, color: 'var(--text)' }}>
-                                    👥 收货人列表
-                                  </h3>
-                                  <button className="btn btn--primary btn--sm" onClick={() => openAddContact(store.id)}>
-                                    + 添加收货人
-                                  </button>
-                                </div>
-                                {!store.contacts || store.contacts.length === 0 ? (
-                                  <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
-                                    <div style={{ fontSize: 32, marginBottom: 8 }}>👥</div>
-                                    <p style={{ fontSize: 13, margin: 0 }}>暂无收货人，点击添加</p>
-                                  </div>
-                                ) : (
-                                  <table className="data-table" style={{ background: 'var(--bg-card, #FFFFFF)' }}>
-                                    <thead>
-                                      <tr>
-                                        <th>姓名</th>
-                                        <th>电话1</th>
-                                        <th>电话2</th>
-                                        <th style={{ width: 130 }}>操作</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {store.contacts.map((contact) => (
-                                        <tr key={contact.id}>
-                                          <td style={{ fontWeight: 600 }}>{contact.name}</td>
-                                          <td>{contact.phone}</td>
-                                          <td style={{ color: 'var(--text-muted)' }}>{contact.phone2 || '—'}</td>
-                                          <td>
-                                            <div style={{ display: 'flex', gap: 4 }}>
-                                              <button className="btn btn--secondary btn--sm" style={{ padding: '4px 10px' }} onClick={() => openEditContact(contact)}>编辑</button>
-                                              <button className="btn btn--danger btn--sm" style={{ padding: '4px 10px' }} onClick={() => handleDeleteContact(contact.id)}>删除</button>
-                                            </div>
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                )}
-                              </td>
-                            </tr>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ))
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
-        <div className="app-footer" style={{ marginTop: 32 }}>
-          WMS 面单打印系统
-        </div>
+        <div className="app-footer" style={{ marginTop: 32 }}>WMS 面单打印系统</div>
       </div>
 
-      {modal && (
-        <div className="modal-overlay" onClick={closeStoreModal}>
+      {modalMode && (
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal__header">
-              <h3 className="modal__title">{modal === 'edit' ? '编辑门店' : '添加门店'}</h3>
-              <button className="modal__close" onClick={closeStoreModal}>✕</button>
+              <h3 className="modal__title">{modalMode === 'edit' ? '编辑门店' : '添加门店'}</h3>
+              <button className="modal__close" onClick={closeModal}>✕</button>
             </div>
-            <form onSubmit={handleStoreSubmit}>
+            <form onSubmit={handleSubmit}>
               <div className="modal__body">
                 <div className="field-group">
                   <div className="field-label">货主</div>
                   <input
                     className="form-input"
-                    value={storeCargoOwner}
-                    onChange={(e) => setStoreCargoOwner(e.target.value)}
-                    placeholder="请输入货主名称"
+                    list="cargo-owner-list"
+                    value={cargoOwner}
+                    onChange={(e) => setCargoOwner(e.target.value)}
+                    placeholder="输入或选择已有货主"
                     required
                   />
+                  <datalist id="cargo-owner-list">
+                    {cargoOwners.map((o) => <option key={o} value={o} />)}
+                  </datalist>
                 </div>
+
                 <div className="field-group" style={{ marginTop: 16 }}>
                   <div className="field-label">门店名称</div>
                   <input
@@ -335,85 +252,58 @@ export default function StoresPage() {
                     required
                   />
                 </div>
+
                 <div className="field-group" style={{ marginTop: 16 }}>
-                  <div className="field-label">地址</div>
+                  <div className="field-label">地址 <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>（选填）</span></div>
                   <input
                     className="form-input"
                     value={storeAddress}
                     onChange={(e) => setStoreAddress(e.target.value)}
-                    placeholder="请输入地址（选填）"
+                    placeholder="请输入地址"
                   />
                 </div>
-              </div>
-              <div className="modal__footer">
-                <button type="button" className="btn btn--secondary" onClick={closeStoreModal}>取消</button>
-                <button type="submit" className="btn btn--primary">{modal === 'edit' ? '保存' : '添加'}</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
-      {contactModal && (
-        <div className="modal-overlay" onClick={closeContactModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal__header">
-              <h3 className="modal__title">{contactModal === 'edit' ? '编辑收货人' : '添加收货人'}</h3>
-              <button className="modal__close" onClick={closeContactModal}>✕</button>
-            </div>
-            <form onSubmit={handleContactSubmit}>
-              <div className="modal__body">
-                {contactModal === 'add' && (
-                  <div className="field-group">
-                    <div className="field-label">所属门店</div>
-                    <select
-                      className="form-select"
-                      value={contactStoreId}
-                      onChange={(e) => setContactStoreId(e.target.value)}
-                      required
-                    >
-                      <option value="">请选择门店</option>
-                      {stores.map((s) => (
-                        <option key={s.id} value={s.id}>{s.cargoOwner ? `[${s.cargoOwner}] ` : ''}{s.name}</option>
-                      ))}
-                    </select>
+                <div style={{ marginTop: 20, padding: '12px 16px', background: 'var(--surface-muted, #F8FAF8)', borderRadius: 'var(--radius-sm, 8px)', border: '1px solid var(--input-border, #CBD5C3)' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 12, color: 'var(--text)' }}>收货人</div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div className="field-group" style={{ marginBottom: 0 }}>
+                      <div className="field-label">姓名</div>
+                      <input
+                        className="form-input"
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="收货人姓名"
+                        required
+                      />
+                    </div>
+                    <div className="field-group" style={{ marginBottom: 0 }}>
+                      <div className="field-label">电话1</div>
+                      <input
+                        className="form-input"
+                        value={contactPhone}
+                        onChange={(e) => setContactPhone(e.target.value)}
+                        placeholder="必填"
+                        required
+                      />
+                    </div>
                   </div>
-                )}
-                <div className="field-group" style={{ marginTop: contactModal === 'add' ? 16 : 0 }}>
-                  <div className="field-label">姓名</div>
-                  <input
-                    className="form-input"
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    placeholder="请输入姓名"
-                    required
-                  />
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
-                  <div className="field-group" style={{ marginBottom: 0 }}>
-                    <div className="field-label">电话1</div>
-                    <input
-                      className="form-input"
-                      value={contactPhone}
-                      onChange={(e) => setContactPhone(e.target.value)}
-                      placeholder="请输入电话"
-                      required
-                    />
-                  </div>
-                  <div className="field-group" style={{ marginBottom: 0 }}>
+
+                  <div className="field-group" style={{ marginTop: 12, marginBottom: 0 }}>
                     <div className="field-label">电话2 <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>（选填）</span></div>
                     <input
                       className="form-input"
                       value={contactPhone2}
                       onChange={(e) => setContactPhone2(e.target.value)}
-                      placeholder="选填"
+                      placeholder="备用电话"
                     />
                   </div>
                 </div>
               </div>
+
               <div className="modal__footer">
-                <button type="button" className="btn btn--secondary" onClick={closeContactModal}>取消</button>
-                <button type="submit" className="btn btn--primary">{contactModal === 'edit' ? '保存' : '添加'}</button>
+                <button type="button" className="btn btn--secondary" onClick={closeModal}>取消</button>
+                <button type="submit" className="btn btn--primary">{modalMode === 'edit' ? '保存' : '添加'}</button>
               </div>
             </form>
           </div>
