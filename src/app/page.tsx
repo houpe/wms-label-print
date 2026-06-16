@@ -179,12 +179,13 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      margin-left: auto;
    }
    .qty { font-size: 16pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
-     .cargo-owner {
-       text-align: center; font-size: 30pt; font-weight: bold; color: #000;
-       margin-bottom: 2mm; letter-spacing: 2px;
-       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-       overflow: hidden; line-height: 1.3;
-     }
+      .cargo-owner {
+        text-align: center; font-size: 30pt; font-weight: bold; color: #000;
+        font-family: "楷体", "KaiTi", "STKaiti", serif;
+        margin-bottom: 2mm; letter-spacing: 2px;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden; line-height: 1.3;
+      }
      .store-name {
        text-align: center; font-size: 30pt; font-weight: bold; color: #000;
        padding-bottom: 3mm; margin-bottom: 3mm;

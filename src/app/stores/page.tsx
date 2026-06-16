@@ -175,6 +175,19 @@ export default function StoresPage() {
               />
             </div>
             <button className="btn btn--primary btn--sm" onClick={openAdd}>+ 添加门店</button>
+            <button className="btn btn--secondary btn--sm" onClick={() => {
+              const rows = [['货主','门店','地址','联系人','电话1','电话2']]
+              filteredStores.forEach(s => {
+                const c = s.contacts?.[0]
+                rows.push([s.cargoOwner, s.name, s.address||'', c?.name||'', c?.phone||'', c?.phone2||''])
+              })
+              const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n')
+              const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'})
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url; a.download = '门店数据.csv'; a.click()
+              URL.revokeObjectURL(url)
+            }}>📥 导出</button>
           </div>
         </div>
 
@@ -227,7 +240,7 @@ export default function StoresPage() {
               <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>共 {filteredStores.length} 条，第 {page}/{totalPages} 页</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>每页</span>
-                <select className="form-select" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }} style={{ height: '28px', padding: '0 8px', fontSize: 13 }}>
+                <select value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }} style={{ height: '28px', padding: '0 8px', fontSize: 13, border: '1px solid var(--input-border, #CBD5C3)', borderRadius: '4px', background: '#fff', cursor: 'pointer' }}>
                   <option value={10}>10</option>
                   <option value={20}>20</option>
                   <option value={50}>50</option>
