@@ -39,6 +39,8 @@ export default function StoresPage() {
   const [stores, setStores] = useState<Store[]>([])
   const [loading, setLoading] = useState(true)
   const [filterCargoOwner, setFilterCargoOwner] = useState('')
+  const [page, setPage] = useState(1)
+  const pageSize = 20
 
   const [modalMode, setModalMode] = useState<ModalMode>(null)
   const [editingStore, setEditingStore] = useState<Store | null>(null)
@@ -68,6 +70,11 @@ export default function StoresPage() {
     () => filterCargoOwner ? stores.filter(s => s.cargoOwner === filterCargoOwner) : stores,
     [stores, filterCargoOwner],
   )
+
+  const totalPages = Math.ceil(filteredStores.length / pageSize)
+  const paginatedStores = filteredStores.slice((page - 1) * pageSize, page * pageSize)
+
+  useEffect(() => { setPage(1) }, [filterCargoOwner])
 
   const openAdd = () => {
     setEditingStore(null)
@@ -116,12 +123,14 @@ export default function StoresPage() {
     }
     closeModal()
     fetchStores()
+    setPage(1)
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('删除门店会同时删除其收货人，确定？')) return
     await fetch(`/print/api/stores/${id}`, { method: 'DELETE' })
     fetchStores()
+    setPage(1)
   }
 
   if (loading) {
@@ -190,7 +199,7 @@ export default function StoresPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStores.map((s) => {
+                  {paginatedStores.map((s) => {
                     const c = s.contacts?.[0]
                     return (
                       <tr key={s.id}>
@@ -211,6 +220,17 @@ export default function StoresPage() {
                   })}
                 </tbody>
               </table>
+            </div>
+          )}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderTop: '1px solid var(--input-border, #CBD5C3)', marginTop: 16 }}>
+              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>共 {filteredStores.length} 条，第 {page}/{totalPages} 页</span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(1)}>首页</button>
+                <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>上一页</button>
+                <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>下一页</button>
+                <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(totalPages)}>末页</button>
+              </div>
             </div>
           )}
         </div>
