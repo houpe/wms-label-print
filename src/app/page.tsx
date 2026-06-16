@@ -814,6 +814,7 @@ interface BatchRow {
   tempZone: string
   qty: number
   remark: string
+  contactName: string
   contactPhone: string
   contactPhone2: string
   address: string
@@ -855,12 +856,13 @@ function BatchUploadPanel({
       const total = row.qty
       const storeAddress = row.address || null
       // 从门店获取联系人（取第一个）
-      const storeObj = stores.find(s => s.id === row.storeId)
-      const contact = storeObj?.contacts?.[0]
-       const contactName = contact?.name || ''
+       const storeObj = stores.find(s => s.id === row.storeId)
+       const contact = storeObj?.contacts?.[0]
+       const contactName = row.contactName || contact?.name || ''
        const contactPhone = row.contactPhone || contact?.phone || ''
        const contactPhone2 = row.contactPhone2 || contact?.phone2 || ''
-      const cargoOwner = storeObj?.cargoOwner || row.cargoOwner.trim()
+       const cargoOwner = storeObj?.cargoOwner || row.cargoOwner.trim()
+       const contactAddress = row.address || storeObj?.address || null
       for (let j = 1; j <= total; j++) {
         labels.push({
           cargoOwner,
@@ -868,7 +870,7 @@ function BatchUploadPanel({
           contactName,
           contactPhone,
           contactPhone2,
-          contactAddress: storeAddress,
+          contactAddress,
           remark: row.remark.trim() || null,
           temperature: row.tempZone.trim(),
           totalInTemp: total,
@@ -956,7 +958,8 @@ function BatchUploadPanel({
           cargoOwner,
           store: storeName,
           storeId: matchedStore?.id || '',
-          address: matchedStore?.address || '',
+          address: getVal(r, '地址', 'address').trim() || matchedStore?.address || '',
+          contactName: getVal(r, '收货人', '联系人', 'contact', 'contactName').trim() || storeContact?.name || '',
           contactPhone: getVal(r, '电话', '联系电话', 'phone').trim() || storeContact?.phone || '',
           contactPhone2: getVal(r, '联系电话2', '电话2', 'phone2').trim() || storeContact?.phone2 || '',
           date: dateStr,
@@ -1001,6 +1004,7 @@ function BatchUploadPanel({
           store: value,
           storeId: matchedStore?.id || '',
           address: matchedStore?.address || '',
+          contactName: c?.name || '',
           contactPhone: c?.phone || '',
           contactPhone2: c?.phone2 || '',
         }
@@ -1018,7 +1022,7 @@ function BatchUploadPanel({
   const addRow = () => {
     setRows(prev => [...prev, {
       id: Math.max(...prev.map(r => r.id), -1) + 1,
-      cargoOwner: '', store: '', storeId: '', contactPhone: '', contactPhone2: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
+      cargoOwner: '', store: '', storeId: '', contactName: '', contactPhone: '', contactPhone2: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
     }])
   }
 
@@ -1064,7 +1068,7 @@ function BatchUploadPanel({
               style={{ border: 'none', cursor: 'pointer', font: 'inherit', gap: 4 }}
               onClick={() => {
                 setRows([{
-                  id: 0, cargoOwner: '', store: '', storeId: '', contactPhone: '', contactPhone2: '', date: nowStr(),
+                  id: 0, cargoOwner: '', store: '', storeId: '', contactName: '', contactPhone: '', contactPhone2: '', date: nowStr(),
                   tempZone: '', qty: 1, remark: '', address: '',
                 }])
                 setShowEditor(true)
