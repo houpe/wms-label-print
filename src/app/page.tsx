@@ -21,9 +21,11 @@ interface Contact {
 }
 
 interface PrintLabel {
+  cargoOwner: string
   storeName: string
   contactName: string
   contactPhone: string
+  contactPhone2: string | null
   contactAddress: string | null
   remark: string | null
   temperature: string
@@ -72,18 +74,30 @@ function nowStr(): string {
 // 构建单张面单的 HTML
 function buildLabelHTML(label: PrintLabel): string {
   const ts = TEMP_STYLES[label.temperature] || { bg: 'transparent', color: '#000', border: '2px solid #000' }
-  const phoneTail = label.contactPhone.slice(-4)
-  const phoneRest = label.contactPhone.slice(0, -4)
+
+  // 电话号码渲染：后4位加粗放大
+  const renderPhone = (phone: string) => {
+    if (!phone) return ''
+    const tail = phone.slice(-4)
+    const rest = phone.slice(0, -4)
+    return `${rest}<span class="phone-tail">${tail}</span>`
+  }
+
+  // 合并显示所有电话（支持多个）
+  const phones = [label.contactPhone, label.contactPhone2].filter((p): p is string => !!p)
+  const phoneHtml = phones.map(renderPhone).join(' / ')
+
   return `
     <div class="label-item">
       <div class="header-row">
         <div class="print-date">打印：${label.printDate}</div>
         <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};"> ${label.temperature} <span class="qty">${label.indexInTemp}/${label.totalInTemp}</span></div>
       </div>
+      ${label.cargoOwner ? `<div class="cargo-owner">${label.cargoOwner}</div>` : ''}
       <div class="store-name">${label.storeName}</div>
         <div class="info-group">
         <div class="info-row">收货人：${label.contactName}</div>
-        <div class="info-row">电话：${phoneRest}<span class="phone-tail">${phoneTail}</span></div>
+        ${phones.length > 0 ? `<div class="info-row">电话：${phoneHtml}</div>` : ''}
         ${label.contactAddress ? `<div class="info-row addr">地址：${label.contactAddress}</div>` : ''}
         ${label.remark ? `<div class="info-row addr">备注：${label.remark}</div>` : ''}
         <div class="info-row date-inline">日期：${label.date}</div>
@@ -152,6 +166,10 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      margin-left: auto;
    }
    .qty { font-size: 16pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
+   .cargo-owner {
+     text-align: center; font-size: 16pt; font-weight: bold; color: #217346;
+     margin-bottom: 1mm; letter-spacing: 1px;
+   }
    .store-name {
      text-align: center; font-size: 22pt; font-weight: bold; color: #000;
      padding-bottom: 3mm; margin-bottom: 3mm;
@@ -484,9 +502,11 @@ export default function Home() {
       for (let i = 1; i <= count; i++) {
         printIdx++
         labels.push({
+          cargoOwner: store.cargoOwner,
           storeName: store.name,
           contactName: storeContact.name,
           contactPhone: storeContact.phone,
+          contactPhone2: storeContact.phone2 || null,
           contactAddress: store.address,
           remark: remark.trim() || null,
           temperature: temp,
@@ -599,7 +619,8 @@ export default function Home() {
                   onChange={handleStoreChange}
                   options={filteredStores.map((s) => {
                     const contact = s.contacts?.[0]
-                    const contactInfo = contact ? ` - ${contact.name}(${contact.phone})` : ''
+                    const phones = contact ? [contact.phone, contact.phone2].filter(Boolean).join(' / ') : ''
+                    const contactInfo = contact ? ` - ${contact.name}(${phones})` : ''
                     return { value: s.id, label: s.name + contactInfo }
                   })}
                   placeholder="请选择门店"
@@ -833,11 +854,15 @@ function BatchUploadPanel({
       const contact = storeObj?.contacts?.[0]
       const contactName = contact?.name || ''
       const contactPhone = contact?.phone || ''
+      const contactPhone2 = contact?.phone2 || null
+      const cargoOwner = storeObj?.cargoOwner || row.cargoOwner.trim()
       for (let j = 1; j <= total; j++) {
         labels.push({
+          cargoOwner,
           storeName: row.store.trim(),
           contactName,
           contactPhone,
+          contactPhone2,
           contactAddress: storeAddress,
           remark: row.remark.trim() || null,
           temperature: row.tempZone.trim(),
@@ -1143,7 +1168,8 @@ function BatchUploadPanel({
                       onChange={(v) => updateCell(row.id, 'store', v)}
                       options={filteredStores.map(s => {
                         const contact = s.contacts?.[0]
-                        const contactInfo = contact ? ` - ${contact.name}(${contact.phone})` : ''
+                        const phones = contact ? [contact.phone, contact.phone2].filter(Boolean).join(' / ') : ''
+                        const contactInfo = contact ? ` - ${contact.name}(${phones})` : ''
                         return { value: s.name, label: s.name + contactInfo }
                       })}
                     />
