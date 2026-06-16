@@ -23,8 +23,7 @@ export async function POST(request: NextRequest) {
     data: {
       name: body.name,
       phone: body.phone,
-      address: body.address,
-      remark: body.remark,
+      phone2: body.phone2 || null,
       storeId: body.storeId,
     },
     include: { store: true },

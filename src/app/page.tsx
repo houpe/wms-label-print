@@ -1,21 +1,23 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 
 interface Store {
   id: string
+  cargoOwner: string
   name: string
   address: string | null
+  contacts: Contact[]
 }
 
 interface Contact {
   id: string
   name: string
   phone: string
-  address: string | null
+  phone2?: string | null
 }
 
 interface PrintLabel {
@@ -365,10 +367,9 @@ function BatchCombobox({ value, onChange, options, placeholder }: BatchComboboxP
 
 export default function Home() {
   const [stores, setStores] = useState<Store[]>([])
-  const [contacts, setContacts] = useState<Contact[]>([])
   const [allContacts, setAllContacts] = useState<Contact[]>([])
+  const [selectedCargoOwner, setSelectedCargoOwner] = useState('')
   const [selectedStoreId, setSelectedStoreId] = useState('')
-  const [selectedContactId, setSelectedContactId] = useState('')
   const [quantities, setQuantities] = useState<Record<string, number>>({
     '冷冻': 0, '冷藏': 0, '常温': 0,
   })
@@ -385,6 +386,25 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const totalQuantity = Object.values(quantities).reduce((sum, q) => sum + q, 0)
+
+  // 从 stores 数据中提取所有货主
+  const cargoOwners = useMemo(() => {
+    const owners = new Set<string>()
+    stores.forEach(s => { if (s.cargoOwner) owners.add(s.cargoOwner) })
+    return Array.from(owners).sort()
+  }, [stores])
+
+  // 根据货主筛选门店
+  const filteredStores = useMemo(() => {
+    if (!selectedCargoOwner) return stores
+    return stores.filter(s => s.cargoOwner === selectedCargoOwner)
+  }, [stores, selectedCargoOwner])
+
+  // 获取当前选中门店的联系人（取第一个）
+  const storeContact = useMemo(() => {
+    const store = stores.find(s => s.id === selectedStoreId)
+    return store?.contacts?.[0] || null
+  }, [stores, selectedStoreId])
 
   const fetchStores = useCallback(async () => {
     const load = async (retries = 2): Promise<Store[] | null> => {
@@ -404,25 +424,20 @@ export default function Home() {
     const data = await load()
     if (!data) return
     setStores(data)
+    // 恢复上次选择
+    const lastCargoOwner = localStorage.getItem('lastCargoOwner')
     const lastStoreId = localStorage.getItem('lastStoreId')
+    if (lastCargoOwner && data.find(s => s.cargoOwner === lastCargoOwner)) {
+      setSelectedCargoOwner(lastCargoOwner)
+    } else if (!lastCargoOwner) {
+      const owners = [...new Set(data.map(s => s.cargoOwner).filter(Boolean))]
+      if (owners.length > 0) {
+        setSelectedCargoOwner(owners[0])
+        localStorage.setItem('lastCargoOwner', owners[0])
+      }
+    }
     if (lastStoreId && data.find((s: Store) => s.id === lastStoreId)) {
       setSelectedStoreId(lastStoreId)
-    } else if (!lastStoreId && data.length > 0) {
-      const firstStoreId = data[0].id
-      setSelectedStoreId(firstStoreId)
-      localStorage.setItem('lastStoreId', firstStoreId)
-    }
-  }, [])
-
-  const fetchContacts = useCallback(async (storeId: string) => {
-    const res = await fetch(`/print/api/contacts?storeId=${storeId}`)
-    const data = await res.json()
-    setContacts(data)
-    const lastContactId = localStorage.getItem('lastContactId')
-    if (lastContactId && data.find((c: Contact) => c.id === lastContactId)) {
-      setSelectedContactId(lastContactId)
-    } else {
-      setSelectedContactId('')
     }
   }, [])
 
@@ -431,24 +446,15 @@ export default function Home() {
     fetch('/print/api/contacts').then(res => res.json()).then(data => setAllContacts(data)).catch(() => {})
   }, [fetchStores])
 
-  useEffect(() => {
-    if (selectedStoreId) {
-      fetchContacts(selectedStoreId)
-    } else {
-      setContacts([])
-      setSelectedContactId('')
-    }
-  }, [selectedStoreId, fetchContacts])
+  const handleCargoOwnerChange = (owner: string) => {
+    setSelectedCargoOwner(owner)
+    setSelectedStoreId('')
+    localStorage.setItem('lastCargoOwner', owner)
+  }
 
   const handleStoreChange = (id: string) => {
     setSelectedStoreId(id)
-    setSelectedContactId('')
     localStorage.setItem('lastStoreId', id)
-  }
-
-  const handleContactChange = (id: string) => {
-    setSelectedContactId(id)
-    localStorage.setItem('lastContactId', id)
   }
 
   const handleQuantityChange = (temp: string, value: string) => {
@@ -458,10 +464,9 @@ export default function Home() {
 
   // 单次打印
   const handleSinglePrint = () => {
-    if (!selectedStoreId || !selectedContactId || totalQuantity === 0) return
+    if (!selectedStoreId || !storeContact || totalQuantity === 0) return
     const store = stores.find((s) => s.id === selectedStoreId)
-    const contact = contacts.find((c) => c.id === selectedContactId)
-    if (!store || !contact) return
+    if (!store) return
 
     // 用户选择的日期 + 当前时间
     const selectDate = new Date(printDate)
@@ -480,8 +485,8 @@ export default function Home() {
         printIdx++
         labels.push({
           storeName: store.name,
-          contactName: contact.name,
-          contactPhone: contact.phone,
+          contactName: storeContact.name,
+          contactPhone: storeContact.phone,
           contactAddress: store.address,
           remark: remark.trim() || null,
           temperature: temp,
@@ -503,7 +508,6 @@ export default function Home() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         storeId: selectedStoreId,
-        contactId: selectedContactId,
         temperature: Object.entries(quantities)
           .filter(([, qty]) => qty > 0)
           .map(([temp, qty]) => `${temp}×${qty}`)
@@ -534,8 +538,6 @@ export default function Home() {
             <Link href="/" className="nav-pill active">打印面单</Link>
             <span className="nav-dot" />
             <Link href="/stores" className="nav-pill">门店管理</Link>
-            <span className="nav-dot" />
-            <Link href="/contacts" className="nav-pill">收货人管理</Link>
           </nav>
         </div>
 
@@ -572,36 +574,47 @@ export default function Home() {
           <div className="card fade-in-up" style={{ maxWidth: 640, margin: '0 auto', animationDelay: '0.1s' }}>
             <h2 className="card-title"><span className="icon"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M4 3h8v10H4V3z" stroke="white" strokeWidth="1.5" fill="none"/><path d="M6 6h4M6 9h3" stroke="white" strokeWidth="1.2" strokeLinecap="round"/></svg></span>面单信息</h2>
 
-            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
               <div className="field-group">
                 <div className="field-label">
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M8 1L3 5.5V14h4V9.5h2V14h4V5.5L8 1z" fill="currentColor"/></svg></span>
-                  门店
+                  货主
                 </div>
-                 <SingleSearchableSelect
-                  value={selectedStoreId}
-                  onChange={handleStoreChange}
-                  options={stores.map((s) => ({ value: s.id, label: s.name }))}
-                  placeholder="请选择门店"
-                  instanceId="store-select"
+                <SingleSearchableSelect
+                  value={selectedCargoOwner}
+                  onChange={handleCargoOwnerChange}
+                  options={cargoOwners.map((owner) => ({ value: owner, label: owner }))}
+                  placeholder="请选择货主"
+                  instanceId="cargo-owner-select"
                 />
               </div>
 
               <div className="field-group">
                 <div className="field-label">
-                  <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><circle cx="8" cy="4.5" r="2.5" fill="currentColor"/><path d="M3 13.5c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" strokeWidth="2" fill="none"/></svg></span>
-                  收货人
+                  <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 6h12M6 2v12" stroke="currentColor" strokeWidth="1.5"/></svg></span>
+                  门店
                 </div>
                 <SingleSearchableSelect
-                  value={selectedContactId}
-                  onChange={handleContactChange}
-                  options={contacts.map((c) => ({ value: c.id, label: `${c.name} · ${c.phone}` }))}
-                  placeholder="请选择收货人"
-                  isDisabled={!selectedStoreId}
-                  instanceId="contact-select"
+                  value={selectedStoreId}
+                  onChange={handleStoreChange}
+                  options={filteredStores.map((s) => ({ value: s.id, label: s.name }))}
+                  placeholder="请选择门店"
+                  isDisabled={!selectedCargoOwner}
+                  instanceId="store-select"
                 />
               </div>
+            </div>
 
+            {storeContact && (
+              <div style={{ marginTop: 16, padding: '12px 16px', background: '#F0FDF4', borderRadius: 'var(--radius-sm, 8px)', border: '1px solid #BBF7D0', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 13, color: '#166534' }}>
+                  <strong>联系人：</strong>{storeContact.name}
+                  {storeContact.phone2 ? ` · ${storeContact.phone} / ${storeContact.phone2}` : (storeContact.phone ? ` · ${storeContact.phone}` : '')}
+                </span>
+              </div>
+            )}
+
+            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr', marginTop: 16 }}>
               <div className="field-group">
                 <div className="field-label">
                   <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.5"/></svg></span>
@@ -613,6 +626,20 @@ export default function Home() {
                   onChange={(e) => setPrintDate(e.target.value)}
                   className="form-select"
                   style={{ height: '40px', padding: '0 14px', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              <div className="field-group">
+                <div className="field-label">
+                  <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M3 3h10v8H5l-2 2V3z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/></svg></span>
+                  备注
+                </div>
+                <input
+                  className="form-input"
+                  value={remark}
+                  onChange={(e) => setRemark(e.target.value)}
+                  placeholder="请输入备注（选填）"
+                  style={{ height: '40px' }}
                 />
               </div>
             </div>
@@ -708,19 +735,6 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="field-group" style={{ marginTop: 20 }}>
-              <div className="field-label">
-                <span className="label-icon"><svg viewBox="0 0 16 16" fill="none" width="11" height="11"><path d="M3 3h10v8H5l-2 2V3z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/></svg></span>
-                备注
-              </div>
-              <input
-                className="form-input"
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                placeholder="请输入备注（选填）"
-              />
-            </div>
-
             <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--surface-muted, #F8FAF8)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 14 }}>
               <span style={{ color: 'var(--text-muted)' }}>
                 各温层汇总：{TEMP_LIST.map(t => quantities[t] > 0 ? `${t} ${quantities[t]}件` : null).filter(Boolean).join('，') || '暂未设置'}
@@ -729,7 +743,7 @@ export default function Home() {
             </div>
 
             <div style={{ marginTop: 20 }}>
-              <button className="btn btn--primary btn--full" onClick={handleSinglePrint} disabled={!selectedStoreId || !selectedContactId || totalQuantity === 0 || printing}>
+              <button className="btn btn--primary btn--full" onClick={handleSinglePrint} disabled={!selectedStoreId || !storeContact || totalQuantity === 0 || printing}>
                 {printing ? (
                   <>
                     <span className="spinner" />
@@ -764,9 +778,9 @@ export default function Home() {
 // Batch row data
 interface BatchRow {
   id: number
+  cargoOwner: string
   store: string
-  contact: string
-  phone: string
+  storeId: string
   date: string
   tempZone: string
   qty: number
@@ -777,11 +791,8 @@ interface BatchRow {
 // Validate a single row, return error messages
 function validateRow(row: BatchRow): string[] {
   const errs: string[] = []
+  if (!row.cargoOwner?.trim()) errs.push('货主为空')
   if (!row.store?.trim()) errs.push('门店为空')
-  if (!row.contact?.trim()) errs.push('收货人为空')
-  const phone = row.phone?.trim()
-  if (!phone) errs.push('电话为空')
-  else if (!/^1[3-9]\d{9}$/.test(phone)) errs.push(`电话"${phone}"格式不正确（需11位手机号）`)
   if (!row.date?.trim()) errs.push('日期为空')
   if (!row.tempZone?.trim()) errs.push('温区为空')
   else if (!['冷冻', '冷藏', '常温'].includes(row.tempZone.trim())) errs.push(`温区"${row.tempZone}"无效`)
@@ -812,11 +823,16 @@ function BatchUploadPanel({
     validRows.forEach((row) => {
       const total = row.qty
       const storeAddress = row.address || null
+      // 从门店获取联系人（取第一个）
+      const storeObj = stores.find(s => s.id === row.storeId)
+      const contact = storeObj?.contacts?.[0]
+      const contactName = contact?.name || ''
+      const contactPhone = contact?.phone || ''
       for (let j = 1; j <= total; j++) {
         labels.push({
           storeName: row.store.trim(),
-          contactName: row.contact.trim(),
-          contactPhone: row.phone.trim(),
+          contactName,
+          contactPhone,
           contactAddress: storeAddress,
           remark: row.remark.trim() || null,
           temperature: row.tempZone.trim(),
@@ -835,7 +851,7 @@ function BatchUploadPanel({
       l.printIndex = idx + 1
     })
     return labels
-  }, [])
+  }, [stores])
 
   const handleBatchFile = async (file: File) => {
     setBatchLoading(true)
@@ -848,7 +864,7 @@ function BatchUploadPanel({
       const wb = xlsxLib.read(buffer, { type: 'array', cellDates: false })
       const ws = wb.Sheets[wb.SheetNames[0]]
       const rawRows: {
-        '门店'?: string; '收货人'?: string; '电话'?: number | string
+        '货主'?: string; '门店'?: string; '电话'?: number | string
         '日期'?: number | string; '温区'?: string; '总件数'?: number; '备注'?: string
       }[] = xlsxLib.utils.sheet_to_json(ws)
 
@@ -871,9 +887,8 @@ function BatchUploadPanel({
       const allKeys = Object.keys(sampleRow)
       const missingCols: string[] = []
       const colMap: Record<string, string[]> = {
+        '货主': ['货主', '货主名', 'owner', 'cargoOwner'],
         '门店': ['门店', '门店名称', 'store'],
-        '收货人': ['收货人', '联系人', '姓名', 'contact'],
-        '电话': ['电话', '联系电话', '手机', '联系方式', 'phone'],
         '日期': ['日期', '时间', 'date'],
         '温区': ['温区', '温层', '温度'],
         '总件数': ['总件数', '件数', '数量', 'qty'],
@@ -897,20 +912,19 @@ function BatchUploadPanel({
         } else if (dv) {
           dateStr = dv
         }
-        const phoneRaw = getVal(r, '电话', '联系电话', '手机', '联系方式', 'phone')
+        const cargoOwner = getVal(r, '货主', '货主名', 'owner', 'cargoOwner').trim()
         const storeName = getVal(r, '门店', '门店名称', 'store').trim()
-        const matchedStore = stores.find((s) => s.name === storeName)
-        const matchedContact = contacts.find((c) => c.name === getVal(r, '收货人', '联系人', '姓名', 'contact').trim())
+        const matchedStore = stores.find((s) => s.cargoOwner === cargoOwner && s.name === storeName)
         return {
           id: i,
+          cargoOwner,
           store: storeName,
-          contact: getVal(r, '收货人', '联系人', '姓名', 'contact').trim(),
-          phone: phoneRaw.replace(/\.0$/, '').trim() || (matchedContact?.phone ?? ''),
+          storeId: matchedStore?.id || '',
+          address: matchedStore?.address || '',
           date: dateStr,
           tempZone: getVal(r, '温区', '温层', '温度').trim(),
           qty: Number(getVal(r, '总件数', '件数', '数量', 'qty')) || 0,
           remark: getVal(r, '备注', 'remark').trim(),
-          address: matchedStore?.address || getVal(r, '地址', '门店地址').trim(),
         }
       })
 
@@ -937,15 +951,14 @@ function BatchUploadPanel({
     setRows(prev => prev.map(r => {
       if (r.id !== rowId) return r
       if (field === 'qty') return { ...r, qty: parseInt(value) || 0 }
-      if (field === 'store') {
-        // 门店变更时自动填充地址
-        const matchedStore = stores.find(s => s.name === value.trim())
-        return { ...r, store: value, address: matchedStore?.address || r.address }
+      if (field === 'cargoOwner') {
+        // 货主变更时清空门店和地址
+        return { ...r, cargoOwner: value, store: '', storeId: '', address: '' }
       }
-      if (field === 'contact') {
-        // 收货人变更时自动填充电话
-        const matchedContact = contacts.find(c => c.name === value.trim())
-        return { ...r, contact: value, phone: matchedContact?.phone || r.phone }
+      if (field === 'store') {
+        // 门店变更时更新 storeId 和地址
+        const matchedStore = stores.find(s => s.cargoOwner === r.cargoOwner && s.name === value.trim())
+        return { ...r, store: value, storeId: matchedStore?.id || '', address: matchedStore?.address || '' }
       }
       return { ...r, [field]: value }
     }))
@@ -960,7 +973,7 @@ function BatchUploadPanel({
   const addRow = () => {
     setRows(prev => [...prev, {
       id: Math.max(...prev.map(r => r.id), -1) + 1,
-      store: '', contact: '', phone: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
+      cargoOwner: '', store: '', storeId: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
     }])
   }
 
@@ -1006,7 +1019,7 @@ function BatchUploadPanel({
               style={{ border: 'none', cursor: 'pointer', font: 'inherit', gap: 4 }}
               onClick={() => {
                 setRows([{
-                  id: 0, store: '', contact: '', phone: '', date: nowStr(),
+                  id: 0, cargoOwner: '', store: '', storeId: '', date: nowStr(),
                   tempZone: '', qty: 1, remark: '', address: '',
                 }])
                 setShowEditor(true)
@@ -1083,9 +1096,8 @@ function BatchUploadPanel({
           <thead>
             <tr>
               <th style={{ width: 40, minWidth: 40, textAlign: 'center' }}>#</th>
+              <th style={{ minWidth: 120 }}>货主</th>
               <th style={{ minWidth: 180 }}>门店</th>
-              <th style={{ minWidth: 120 }}>收货人</th>
-              <th style={{ minWidth: 120 }}>电话</th>
               <th style={{ width: 90, minWidth: 90 }}>温区</th>
               <th style={{ width: 70, minWidth: 70 }}>件数</th>
               <th style={{ minWidth: 120 }}>备注</th>
@@ -1098,25 +1110,26 @@ function BatchUploadPanel({
             {rows.map((row) => {
               const errs = validateRow(row)
               const hasErr = errs.length > 0
+              const cargoOwners = [...new Set(stores.map(s => s.cargoOwner))].filter(Boolean)
+              const filteredStores = stores.filter(s => s.cargoOwner === row.cargoOwner)
               return (
                 <React.Fragment key={row.id}>
                   <tr className={hasErr ? 'batch-row-error' : ''}>
                     <td className="batch-row-num" title={`第 ${row.id + 1} 行`}>{row.id + 1}</td>
                   <td>
                     <BatchCombobox
-                      value={row.store}
-                      onChange={(v) => updateCell(row.id, 'store', v)}
-                      options={stores.map(s => ({ value: s.name, label: s.name }))}
+                      value={row.cargoOwner}
+                      onChange={(v) => updateCell(row.id, 'cargoOwner', v)}
+                      options={cargoOwners.map(co => ({ value: co, label: co }))}
                     />
                   </td>
                   <td>
                     <BatchCombobox
-                      value={row.contact}
-                      onChange={(v) => updateCell(row.id, 'contact', v)}
-                      options={contacts.map(c => ({ value: c.name, label: c.name }))}
+                      value={row.store}
+                      onChange={(v) => updateCell(row.id, 'store', v)}
+                      options={filteredStores.map(s => ({ value: s.name, label: s.name }))}
                     />
                   </td>
-                  <td><input className="batch-input" value={row.phone} onChange={(e) => updateCell(row.id, 'phone', e.target.value)} title={row.phone} /></td>
                   <td>
                     {(() => {
                       const tempColors: Record<string, { bg: string; color: string }> = {

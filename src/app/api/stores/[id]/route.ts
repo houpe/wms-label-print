@@ -23,6 +23,7 @@ export async function PUT(
   const store = await prisma.store.update({
     where: { id },
     data: {
+      cargoOwner: body.cargoOwner || '',
       name: body.name,
       address: body.address,
     },

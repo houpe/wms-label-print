@@ -1,0 +1,631 @@
+
+> wms-label@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.43.184:3000
+- Environments: .env
+✓ Ready in 314ms
+
+ GET /stores 200 in 276ms (next.js: 125ms, application-code: 151ms)
+ GET /api/stores 200 in 126ms (next.js: 57ms, application-code: 70ms)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 153ms (next.js: 75ms, application-code: 78ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 29ms (next.js: 14ms, application-code: 16ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 11ms (next.js: 4ms, application-code: 7ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 9ms (next.js: 4ms, application-code: 6ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+ GET / 500 in 10ms (next.js: 3ms, application-code: 7ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 18ms (next.js: 6ms, application-code: 12ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./src/app/page.tsx:972:6
+Expression expected
+  [90m970 |[0m       }
+  [90m971 |[0m       [36mreturn[0m { ...r, [field]: value }
+[31m[1m>[0m [90m972 |[0m     }))
+  [90m    |[0m      [31m[1m^[0m
+  [90m973 |[0m   }
+  [90m974 |[0m
+  [90m975 |[0m   [90m// 删除行[0m
+
+Parsing ecmascript source code failed
+
+
+ GET / 500 in 12ms (next.js: 7ms, application-code: 5ms)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed
+
+
+    at <unknown> (Error: ./src/app/page.tsx:972:6)
+    at <unknown> (Error: (./src/app/page.tsx:972:6)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./src/app/page.tsx:972:6
+Expression expected
+  970 |       }
+  971 |       return { ...r, [field]: value }
+> 972 |     }))
+      |      ^
+  973 |   }
+  974 |
+  975 |   // 删除行
+
+Parsing ecmascript source code failed 
+    at handleErrors (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file:///Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+✓ Compiled in 317ms
+ GET /stores 200 in 236ms (next.js: 38ms, application-code: 198ms)
+ GET /stores 200 in 177ms (next.js: 21ms, application-code: 156ms)
+ GET /stores 200 in 157ms (next.js: 91ms, application-code: 65ms)
+ GET / 200 in 178ms (next.js: 14ms, application-code: 164ms)
+ GET /stores 200 in 64ms (next.js: 8ms, application-code: 55ms)
+ GET /stores 200 in 54ms (next.js: 3ms, application-code: 51ms)
+ GET /stores 200 in 56ms (next.js: 4ms, application-code: 52ms)
+ GET /stores 200 in 70ms (next.js: 5ms, application-code: 64ms)
+ GET /stores 200 in 52ms (next.js: 3ms, application-code: 49ms)
+ GET /stores 200 in 49ms (next.js: 4ms, application-code: 46ms)
+ GET /stores 200 in 39ms (next.js: 5ms, application-code: 35ms)
+ GET /api/stores 200 in 56ms (next.js: 27ms, application-code: 29ms)
+ GET /api/contacts 200 in 56ms (next.js: 45ms, application-code: 11ms)
+ GET /stores 200 in 75ms (next.js: 2ms, application-code: 73ms)
+ GET / 200 in 35ms (next.js: 1927µs, application-code: 33ms)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./src/lib/prisma.ts}["prisma"].printOrder.create()` invocation in
+/Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/server/chunks/[root-of-the-server]__09qohus._.js:72:165
+
+  69 ;
+  70 async function POST(request) {
+  71     const body = await request.json();
+→ 72     const order = await {imported module ./src/lib/prisma.ts}["prisma"].printOrder.create(
+Foreign key constraint violated: `foreign key`
+    at <unknown> (src/app/api/print-orders/route.ts:6:41)
+    at async POST (src/app/api/print-orders/route.ts:6:17)
+  4 | export async function POST(request: NextRequest) {
+  5 |   const body = await request.json()
+> 6 |   const order = await prisma.printOrder.create({
+    |                                         ^
+  7 |     data: {
+  8 |       storeId: body.storeId,
+  9 |       temperature: body.temperature, {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'PrintOrder', field_name: 'foreign key' }
+}
+ POST /api/print-orders 500 in 173ms (next.js: 44ms, application-code: 129ms)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./src/lib/prisma.ts}["prisma"].printOrder.create()` invocation in
+/Users/houpe/Documents/我的开发项目/wms面单打印/wms-label/.next/dev/server/chunks/[root-of-the-server]__09qohus._.js:72:165
+
+  69 ;
+  70 async function POST(request) {
+  71     const body = await request.json();
+→ 72     const order = await {imported module ./src/lib/prisma.ts}["prisma"].printOrder.create(
+Foreign key constraint violated: `foreign key`
+    at <unknown> (src/app/api/print-orders/route.ts:6:41)
+    at async POST (src/app/api/print-orders/route.ts:6:17)
+  4 | export async function POST(request: NextRequest) {
+  5 |   const body = await request.json()
+> 6 |   const order = await prisma.printOrder.create({
+    |                                         ^
+  7 |     data: {
+  8 |       storeId: body.storeId,
+  9 |       temperature: body.temperature, {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'PrintOrder', field_name: 'foreign key' }
+}
+ POST /api/print-orders 500 in 92ms (next.js: 5ms, application-code: 88ms)
+ GET / 200 in 68ms (next.js: 13ms, application-code: 55ms)
+ GET /api/contacts 200 in 50ms (next.js: 12ms, application-code: 38ms)
+ GET /api/stores 200 in 53ms (next.js: 3ms, application-code: 50ms)
+ POST /api/print-orders 201 in 19ms (next.js: 4ms, application-code: 15ms)
+ GET /stores 200 in 27ms (next.js: 7ms, application-code: 20ms)
+ GET /api/stores 200 in 13ms (next.js: 8ms, application-code: 5ms)
+ GET /api/stores 200 in 4ms (next.js: 1076µs, application-code: 3ms)

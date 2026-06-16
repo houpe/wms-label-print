@@ -12,8 +12,7 @@ export async function PUT(
     data: {
       name: body.name,
       phone: body.phone,
-      address: body.address,
-      remark: body.remark,
+      phone2: body.phone2 || null,
     },
   })
   return NextResponse.json(contact)
