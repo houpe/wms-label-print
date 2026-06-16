@@ -40,7 +40,7 @@ export default function StoresPage() {
   const [loading, setLoading] = useState(true)
   const [filterCargoOwner, setFilterCargoOwner] = useState('')
   const [page, setPage] = useState(1)
-  const pageSize = 20
+  const [pageSize, setPageSize] = useState(10)
 
   const [modalMode, setModalMode] = useState<ModalMode>(null)
   const [editingStore, setEditingStore] = useState<Store | null>(null)
@@ -223,13 +223,22 @@ export default function StoresPage() {
             </div>
           )}
           {totalPages > 1 && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderTop: '1px solid var(--input-border, #CBD5C3)', marginTop: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderTop: '1px solid var(--input-border, #CBD5C3)', marginTop: 16, flexWrap: 'wrap', gap: 12 }}>
               <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>共 {filteredStores.length} 条，第 {page}/{totalPages} 页</span>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(1)}>首页</button>
-                <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>上一页</button>
-                <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>下一页</button>
-                <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(totalPages)}>末页</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>每页</span>
+                <select className="form-select" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }} style={{ height: '28px', padding: '0 8px', fontSize: 13 }}>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(1)}>首页</button>
+                  <button className="btn btn--secondary btn--sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>上一页</button>
+                  <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>下一页</button>
+                  <button className="btn btn--secondary btn--sm" disabled={page === totalPages} onClick={() => setPage(totalPages)}>末页</button>
+                </div>
               </div>
             </div>
           )}
