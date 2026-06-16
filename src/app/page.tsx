@@ -387,12 +387,30 @@ export default function Home() {
   const totalQuantity = Object.values(quantities).reduce((sum, q) => sum + q, 0)
 
   const fetchStores = useCallback(async () => {
-    const res = await fetch('/print/api/stores')
-    const data = await res.json()
+    const load = async (retries = 2): Promise<Store[] | null> => {
+      try {
+        const res = await fetch('/print/api/stores')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return await res.json()
+      } catch (err) {
+        if (retries > 0) {
+          await new Promise(r => setTimeout(r, 500))
+          return load(retries - 1)
+        }
+        console.error('fetchStores failed:', err)
+        return null
+      }
+    }
+    const data = await load()
+    if (!data) return
     setStores(data)
     const lastStoreId = localStorage.getItem('lastStoreId')
     if (lastStoreId && data.find((s: Store) => s.id === lastStoreId)) {
       setSelectedStoreId(lastStoreId)
+    } else if (!lastStoreId && data.length > 0) {
+      const firstStoreId = data[0].id
+      setSelectedStoreId(firstStoreId)
+      localStorage.setItem('lastStoreId', firstStoreId)
     }
   }, [])
 
@@ -976,7 +994,7 @@ function BatchUploadPanel({
             📋 上传Excel或直接新建，所有字段必填
           </div>
           <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-            <a href="/批量模板.xls" download="批量模板.xls" className="nav-pill" style={{ textDecoration: 'none', gap: 4 }}>
+            <a href="/print/批量模板.xls" download="批量模板.xls" className="nav-pill" style={{ textDecoration: 'none', gap: 4 }}>
               <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
                 <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M2 12v2h12v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
