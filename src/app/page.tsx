@@ -10,6 +10,11 @@ const cleanStoreName = (name: string) => {
   if (name.startsWith('锅几锅几')) {
     return name.replace(/^锅几锅几[（(]?/, '').replace(/[）)]?$/, '').trim()
   }
+  // 派乐汉堡：只取（）里面的内容
+  if (name.includes('（') && name.includes('）')) {
+    const match = name.match(/（([^）]+)）/)
+    if (match) return match[1].trim()
+  }
   return name
 }
 
