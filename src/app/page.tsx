@@ -1002,6 +1002,7 @@ function BatchUploadPanel({
           storeId: matchedStore?.id || '',
           address: matchedStore?.address || '',
           contactPhone: c?.phone || '',
+          contactPhone2: c?.phone2 || '',
         }
       }
       return { ...r, [field]: value }
@@ -1017,7 +1018,7 @@ function BatchUploadPanel({
   const addRow = () => {
     setRows(prev => [...prev, {
       id: Math.max(...prev.map(r => r.id), -1) + 1,
-      cargoOwner: '', store: '', storeId: '', contactPhone: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
+      cargoOwner: '', store: '', storeId: '', contactPhone: '', contactPhone2: '', date: nowStr(), tempZone: '', qty: 1, remark: '', address: '',
     }])
   }
 
@@ -1063,7 +1064,7 @@ function BatchUploadPanel({
               style={{ border: 'none', cursor: 'pointer', font: 'inherit', gap: 4 }}
               onClick={() => {
                 setRows([{
-                  id: 0, cargoOwner: '', store: '', storeId: '', contactPhone: '', date: nowStr(),
+                  id: 0, cargoOwner: '', store: '', storeId: '', contactPhone: '', contactPhone2: '', date: nowStr(),
                   tempZone: '', qty: 1, remark: '', address: '',
                 }])
                 setShowEditor(true)
