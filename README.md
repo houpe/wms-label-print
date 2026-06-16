@@ -4,12 +4,12 @@
 
 ## 功能特性
 
-- **单次新建**：选择门店和收货人，按温层（冷冻/冷藏/常温）独立设置件数，实时生成面单
+- **单次新建**：选择货主、门店，按温层（冷冻/冷藏/常温）独立设置件数，实时生成面单
 - **批量新建**：上传 Excel 批量生成面单，支持下载模板
-- **门店管理**：添加、编辑、删除门店信息
-- **收货人管理**：为每个门店配置收货人（姓名、电话、地址）
+- **门店管理**：添加、编辑、删除门店信息，支持货主和联系电话
+- **联系人管理**：联系人归属门店，单次和批量创建时自动从门店获取联系人
 - **标签打印**：76mm × 133mm 竖版面单，内容旋转90°，每件一张，精准分页
-- **记忆功能**：自动保存上次选择的门店、收货人、温层
+- **记忆功能**：自动保存上次选择的货主、门店、温层
 - **打印记录**：所有打印操作自动入库
 
 ## 面单规格
@@ -20,7 +20,6 @@
   - 门店名称（加粗居中）
   - 收货人（黑色加粗）
   - 联系电话（后四位加大显示）
-  - 地址（选填）
   - 日期（精确到秒，年份缩写如 26/06/15）
   - 温层标签（冷冻：黑底白字；冷藏/常温：黑字黑框）
   - 件数序号（如 1/5）
@@ -35,7 +34,8 @@
 | 数据库 | SQLite |
 | ORM | Prisma 5 |
 | Excel解析 | xlsx (SheetJS) |
-| UI设计 | 绿色主题，参考 WMS 表格转换系统 |
+| 下拉选择 | react-select |
+| UI设计 | 绿色主题 |
 
 ## 快速开始
 
@@ -50,30 +50,29 @@ npx prisma migrate deploy
 npm run dev
 ```
 
-访问 http://localhost:3000
+访问 http://localhost:3000/print
 
 ## 页面路由
 
 | 路由 | 说明 |
 |------|------|
-| `/` | 面单打印（单次新建 + 批量新建） |
-| `/stores` | 门店管理 |
-| `/contacts` | 收货人管理 |
+| `/print` | 面单打印（单次新建 + 批量新建 Tab） |
+| `/print/stores` | 门店管理 |
 
 ## API 接口
 
 | 接口 | 方法 | 说明 |
 |------|------|------|
-| `/api/stores` | GET | 获取所有门店（含收货人） |
-| `/api/stores` | POST | 创建门店 |
-| `/api/stores/[id]` | PUT | 更新门店 |
-| `/api/stores/[id]` | DELETE | 删除门店 |
-| `/api/contacts` | GET | 获取收货人（支持 ?storeId 过滤） |
-| `/api/contacts` | POST | 创建收货人 |
-| `/api/contacts/[id]` | PUT | 更新收货人 |
-| `/api/contacts/[id]` | DELETE | 删除收货人 |
-| `/api/print-orders` | GET | 获取打印记录 |
-| `/api/print-orders` | POST | 创建打印记录 |
+| `/print/api/stores` | GET | 获取所有门店（含联系人） |
+| `/print/api/stores` | POST | 创建门店 |
+| `/print/api/stores/[id]` | PUT | 更新门店 |
+| `/print/api/stores/[id]` | DELETE | 删除门店 |
+| `/print/api/contacts` | GET | 获取联系人（支持 ?storeId 过滤） |
+| `/print/api/contacts` | POST | 创建联系人 |
+| `/print/api/contacts/[id]` | PUT | 更新联系人 |
+| `/print/api/contacts/[id]` | DELETE | 删除联系人 |
+| `/print/api/print-orders` | GET | 获取打印记录 |
+| `/print/api/print-orders` | POST | 创建打印记录 |
 
 ## 批量上传
 
@@ -96,10 +95,9 @@ src/
 ├── app/
 │   ├── page.tsx          # 首页（单次新建 + 批量新建 Tab）
 │   ├── stores/page.tsx   # 门店管理
-│   ├── contacts/page.tsx # 收货人管理
 │   ├── api/
 │   │   ├── stores/       # 门店 API
-│   │   ├── contacts/     # 收货人 API
+│   │   ├── contacts/     # 联系人 API
 │   │   └── print-orders/ # 打印记录 API
 │   ├── globals.css       # 全局样式（绿色主题）
 │   └── layout.tsx        # 根布局
@@ -110,6 +108,17 @@ prisma/
 public/
 └── 批量模板.xls          # 批量上传模板
 ```
+
+## 部署
+
+服务器部署在 `root@www.houpe.top`，部署目录 `/opt/wms-label`，通过 PM2 管理进程。
+
+```bash
+# 推送部署（首次配置后）
+git push server main
+```
+
+Nginx 反向代理路径：`https://houpe.top/print`
 
 ## ESLint
 
