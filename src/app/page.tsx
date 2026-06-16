@@ -100,10 +100,22 @@ function buildLabelHTML(label: PrintLabel): string {
   const phones = [label.contactPhone, label.contactPhone2].filter((p): p is string => !!p)
   const phoneHtml = phones.map(renderPhone).join(' / ')
 
-  // 门店名自适应字体：根据长度计算合适的字号
+  // 门店名自适应字体：根据字数精准映射字号，防止在固定版面中溢出截断
   const storeNameLen = label.storeName.length
   let storeFontSize = 30
-  if (storeNameLen > 16) storeFontSize = Math.max(14, Math.round(30 * 16 / storeNameLen))
+  if (storeNameLen > 20) {
+    storeFontSize = 11
+  } else if (storeNameLen > 16) {
+    storeFontSize = 13
+  } else if (storeNameLen > 13) {
+    storeFontSize = 15
+  } else if (storeNameLen > 10) {
+    storeFontSize = 18
+  } else if (storeNameLen > 8) {
+    storeFontSize = 21
+  } else if (storeNameLen > 6) {
+    storeFontSize = 24
+  }
 
   // 货主名自适应字体
   const cargoOwnerLen = label.cargoOwner.length
@@ -184,11 +196,11 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      font-size: 7pt; color: #ccc;
    }
    .temp-badge {
-      padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 17pt;
+      padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 22pt;
      display: inline-flex; align-items: center; white-space: nowrap;
      margin-left: auto;
    }
-   .qty { font-size: 16pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
+   .qty { font-size: 21pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
       .cargo-owner {
         text-align: center; font-size: 30pt; font-weight: bold; color: #000;
         font-family: "楷体", "KaiTi", "STKaiti", serif;
@@ -200,8 +212,8 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
        text-align: center; font-size: 30pt; font-weight: bold; color: #000;
        padding-bottom: 3mm; margin-bottom: 3mm;
        border-bottom: 2px solid #000;
-       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-       overflow: hidden; line-height: 1.2;
+       word-break: break-all;
+       line-height: 1.2;
      }
    .info-group { flex: 1; display: flex; flex-direction: column; gap: 1.5mm; }
    .info-row { font-size: 16pt; color: #333; font-weight: 600; line-height: 1.35; }
