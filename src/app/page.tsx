@@ -96,7 +96,7 @@ function buildLabelHTML(label: PrintLabel): string {
       ${label.cargoOwner ? `<div class="cargo-owner">${label.cargoOwner}</div>` : ''}
       <div class="store-name">${label.storeName}</div>
         <div class="info-group">
-        <div class="info-row">收货人：${label.contactName}</div>
+        <div class="info-row">联系人：${label.contactName}</div>
         ${phones.length > 0 ? `<div class="info-row">电话：${phoneHtml}</div>` : ''}
         ${label.contactAddress ? `<div class="info-row addr">地址：${label.contactAddress}</div>` : ''}
         ${label.remark ? `<div class="info-row addr">备注：${label.remark}</div>` : ''}
