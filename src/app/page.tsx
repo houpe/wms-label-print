@@ -161,7 +161,7 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      font-size: 7pt; color: #ccc;
    }
    .temp-badge {
-     padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 14pt;
+      padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 17pt;
      display: inline-flex; align-items: center; white-space: nowrap;
      margin-left: auto;
    }
@@ -815,6 +815,7 @@ interface BatchRow {
   qty: number
   remark: string
   contactPhone: string
+  contactPhone2: string
   address: string
 }
 
@@ -856,9 +857,9 @@ function BatchUploadPanel({
       // 从门店获取联系人（取第一个）
       const storeObj = stores.find(s => s.id === row.storeId)
       const contact = storeObj?.contacts?.[0]
-      const contactName = contact?.name || ''
-      const contactPhone = contact?.phone || ''
-      const contactPhone2 = contact?.phone2 || null
+       const contactName = contact?.name || ''
+       const contactPhone = row.contactPhone || contact?.phone || ''
+       const contactPhone2 = row.contactPhone2 || contact?.phone2 || ''
       const cargoOwner = storeObj?.cargoOwner || row.cargoOwner.trim()
       for (let j = 1; j <= total; j++) {
         labels.push({
@@ -957,6 +958,7 @@ function BatchUploadPanel({
           storeId: matchedStore?.id || '',
           address: matchedStore?.address || '',
           contactPhone: getVal(r, '电话', '联系电话', 'phone').trim() || storeContact?.phone || '',
+          contactPhone2: getVal(r, '联系电话2', '电话2', 'phone2').trim() || storeContact?.phone2 || '',
           date: dateStr,
           tempZone: getVal(r, '温区', '温层', '温度').trim(),
           qty: Number(getVal(r, '总件数', '件数', '数量', 'qty')) || 0,
