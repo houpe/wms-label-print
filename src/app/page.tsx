@@ -1049,7 +1049,7 @@ function BatchUploadPanel({
             📋 上传Excel或直接新建，所有字段必填
           </div>
           <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-            <a href="/print/批量模板.xls" download="批量模板.xls" className="nav-pill" style={{ textDecoration: 'none', gap: 4 }}>
+            <a href="/print/batch-template.xls" download="批量模板.xls" className="nav-pill" style={{ textDecoration: 'none', gap: 4 }}>
               <svg viewBox="0 0 16 16" fill="none" width="14" height="14" style={{ flexShrink: 0 }}>
                 <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M2 12v2h12v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
