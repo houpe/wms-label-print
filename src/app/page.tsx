@@ -166,19 +166,19 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      margin-left: auto;
    }
    .qty { font-size: 16pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
-    .cargo-owner {
-      text-align: center; font-size: 21pt; font-weight: bold; color: #217346;
-      margin-bottom: 1mm; letter-spacing: 1px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      overflow: hidden; line-height: 1.3;
-    }
-    .store-name {
-      text-align: center; font-size: 29pt; font-weight: bold; color: #000;
-      padding-bottom: 3mm; margin-bottom: 3mm;
-      border-bottom: 2px solid #217346;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      overflow: hidden; line-height: 1.2;
-    }
+     .cargo-owner {
+       text-align: center; font-size: 42pt; font-weight: bold; color: #217346;
+       margin-bottom: 2mm; letter-spacing: 2px;
+       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+       overflow: hidden; line-height: 1.3;
+     }
+     .store-name {
+       text-align: center; font-size: 58pt; font-weight: bold; color: #000;
+       padding-bottom: 4mm; margin-bottom: 4mm;
+       border-bottom: 3px solid #217346;
+       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+       overflow: hidden; line-height: 1.2;
+     }
    .info-group { flex: 1; display: flex; flex-direction: column; gap: 1.5mm; }
    .info-row { font-size: 16pt; color: #333; font-weight: 600; line-height: 1.35; }
    .info-row.addr { font-size: 13pt; color: #444; font-weight: 500; line-height: 1.3; word-break: break-all; }
