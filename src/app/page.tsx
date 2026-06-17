@@ -58,11 +58,11 @@ const TEMP_ICONS: Record<string, React.ReactNode> = {
 
 const TEMP_LIST = ['冷冻', '冷藏', '常温'] as const
 
-// 温层样式：只有冷冻有黑色背景
+// 温层样式
 const TEMP_STYLES: Record<string, { bg: string; color: string; border: string }> = {
   '冷冻': { bg: '#000000', color: '#ffffff', border: 'none' },
-  '冷藏': { bg: 'transparent', color: '#000000', border: '2px solid #000' },
-  '常温': { bg: 'transparent', color: '#000000', border: '2px solid #000' },
+  '冷藏': { bg: '#ffffff', color: '#000000', border: '2px solid #000' },
+  '常温': { bg: '#ffffff', color: '#000000', border: '2px solid #000' },
 }
 
 function excelDateToString(serial: number): string {
@@ -100,43 +100,42 @@ function buildLabelHTML(label: PrintLabel): string {
   const phones = [label.contactPhone, label.contactPhone2].filter((p): p is string => !!p)
   const phoneHtml = phones.map(renderPhone).join(' / ')
 
-  // 门店名自适应字体：根据字数精准映射字号，防止在固定版面中溢出截断
-  const storeNameLen = label.storeName.length
-  let storeFontSize = 30
-  if (storeNameLen > 20) {
-    storeFontSize = 11
-  } else if (storeNameLen > 16) {
-    storeFontSize = 13
-  } else if (storeNameLen > 13) {
-    storeFontSize = 15
-  } else if (storeNameLen > 10) {
-    storeFontSize = 18
-  } else if (storeNameLen > 8) {
-    storeFontSize = 21
-  } else if (storeNameLen > 6) {
-    storeFontSize = 24
+  // 自适应字号：至多2行，第二行不能只有1个字
+  const computeAdaptiveFontSize = (len: number): number => {
+    const usableWidthMm = 68
+    const sizes = [30, 28, 26, 24, 22, 20, 18, 16, 14, 13, 12, 11, 10, 9, 8]
+    for (const size of sizes) {
+      const charsPerLine = Math.floor(usableWidthMm / (size * 0.3528))
+      // 单行放得下
+      if (len <= charsPerLine) return size
+      // 2行放得下，且第二行至少2个字
+      const secondLine = len - charsPerLine
+      if (len <= charsPerLine * 2 && secondLine >= 2) return size
+    }
+    return 8
   }
 
+  // 门店名自适应字体
+  const storeFontSize = computeAdaptiveFontSize(label.storeName.length)
+
   // 货主名自适应字体
-  const cargoOwnerLen = label.cargoOwner.length
-  let cargoFontSize = 30
-  if (cargoOwnerLen > 16) cargoFontSize = Math.max(14, Math.round(30 * 16 / cargoOwnerLen))
+  const cargoFontSize = computeAdaptiveFontSize(label.cargoOwner.length)
 
   return `
     <div class="label-item">
       <div class="header-row">
         <div class="print-date">打印：${label.printDate}</div>
-        <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};"> ${label.temperature} <span class="qty">${label.indexInTemp}/${label.totalInTemp}</span></div>
+        <div class="temp-badge" style="background:${ts.bg};color:${ts.color};border:${ts.border};">${label.temperature}<span class="qty">${label.indexInTemp}/${label.totalInTemp}</span></div>
       </div>
       ${label.cargoOwner ? `<div class="cargo-owner" style="font-size:${cargoFontSize}pt">${label.cargoOwner}</div>` : ''}
       <div class="store-name" style="font-size:${storeFontSize}pt">${label.storeName}</div>
-        <div class="info-group">
-        <div class="info-row">联系人：${label.contactName}</div>
-        ${phones.length > 0 ? `<div class="info-row">电话：${phoneHtml}</div>` : ''}
-        ${label.contactAddress ? `<div class="info-row addr">地址：${label.contactAddress}</div>` : ''}
-        ${label.remark ? `<div class="info-row addr">备注：${label.remark}</div>` : ''}
-        <div class="info-row date-inline">日期：${label.date}</div>
+      <div class="info-group">
+        <div class="info-row"><span class="info-label">联系人</span><span class="info-value">${label.contactName}</span></div>
+        ${phones.length > 0 ? `<div class="info-row"><span class="info-label">电话</span><span class="info-value phone">${phoneHtml}</span></div>` : ''}
+        ${label.contactAddress ? `<div class="info-row addr"><span class="info-label">地址</span><span class="info-value">${label.contactAddress}</span></div>` : ''}
+        ${label.remark ? `<div class="info-row addr"><span class="info-label">备注</span><span class="info-value">${label.remark}</span></div>` : ''}
       </div>
+      <div class="footer-date">${label.date}</div>
     </div>`
 }
 
@@ -178,48 +177,61 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
   body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    font-family: SimHei, "Microsoft YaHei", sans-serif;
+    font-family: SimHei, "Microsoft YaHei", "Heiti SC", sans-serif;
+    color: #000;
   }
    .label-item {
      width: 76mm; height: 133mm;
      position: relative;
      page-break-after: always;
-     padding: 10mm 3mm 15mm;
+     page-break-inside: avoid;
+     overflow: hidden;
+     padding: 6mm 4mm 4mm;
      display: flex; flex-direction: column;
    }
    .label-item:last-child { page-break-after: auto; }
+
    .header-row {
-     display: flex; align-items: center; justify-content: space-between;
-     margin-bottom: 3mm;
+     display: flex; align-items: flex-end; justify-content: space-between;
+     margin-bottom: 2mm;
    }
-   .print-date {
-     font-size: 7pt; color: #ccc;
-   }
+   .print-date { font-size: 6.5pt; color: #ccc; }
    .temp-badge {
-      padding: 2px 10px; border-radius: 3px; font-weight: bold; font-size: 22pt;
+     padding: 2px 10px; border-radius: 4px; font-weight: bold; font-size: 20pt;
      display: inline-flex; align-items: center; white-space: nowrap;
-     margin-left: auto;
+     letter-spacing: 1px; line-height: 1.2;
    }
-   .qty { font-size: 21pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
-      .cargo-owner {
-        text-align: center; font-size: 30pt; font-weight: bold; color: #000;
-        font-family: "楷体", "KaiTi", "STKaiti", serif;
-        margin-bottom: 2mm; letter-spacing: 2px;
-        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-        overflow: hidden; line-height: 1.3;
-      }
-     .store-name {
-       text-align: center; font-size: 30pt; font-weight: bold; color: #000;
-       padding-bottom: 3mm; margin-bottom: 3mm;
-       border-bottom: 2px solid #000;
-       word-break: break-all;
-       line-height: 1.2;
-     }
-   .info-group { flex: 1; display: flex; flex-direction: column; gap: 1.5mm; }
-   .info-row { font-size: 16pt; color: #333; font-weight: 600; line-height: 1.35; }
-   .info-row.addr { font-size: 13pt; color: #444; font-weight: 500; line-height: 1.3; word-break: break-all; }
-   .info-row.date-inline { font-size: 13pt; color: #444; font-weight: 500; margin-top: auto; padding-top: 2mm; border-top: 1px solid #ccc; }
-   .phone-tail { font-size: 18pt; color: #333; }
+   .qty { font-size: 18pt; font-weight: bold; margin-left: 4px; letter-spacing: -1px; }
+
+   .cargo-owner {
+     text-align: center; font-weight: bold; color: #000;
+     font-family: "楷体", "KaiTi", "STKaiti", serif;
+     margin-bottom: 1mm; letter-spacing: 1px;
+     line-height: 1.2; word-break: break-all;
+   }
+
+   .store-name {
+     text-align: center; font-weight: bold; color: #000;
+     padding-bottom: 2mm; margin-bottom: 2mm;
+     border-bottom: 2px solid #000;
+     word-break: break-all; line-height: 1.2;
+   }
+
+   .info-group { display: flex; flex-direction: column; gap: 0; }
+   .info-row { display: flex; align-items: baseline; font-size: 13pt; line-height: 1.35; padding: 0.8mm 0; }
+   .info-label {
+     display: inline-block; width: 16mm; font-size: 13pt; font-weight: bold; color: #000; text-align: justify; text-align-last: justify; padding-right: 2mm;
+   }
+   .info-value { font-weight: bold; color: #000; flex: 1; padding-left: 2mm; }
+   .info-value.phone { font-size: 15pt; letter-spacing: 0.5px; }
+   .info-row.addr { align-items: flex-start; }
+   .info-row.addr .info-value { font-size: 11pt; font-weight: 500; color: #333; line-height: 1.25; }
+
+   .footer-date {
+     text-align: center; font-size: 10pt; font-weight: 600; color: #666;
+     padding-top: 1.5mm; margin-top: auto;
+     border-top: 1px dashed #ccc;
+   }
 </style>
 </head>
 <body>
