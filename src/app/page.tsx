@@ -615,11 +615,19 @@ export default function Home() {
             <div className="logo-badge">WMS · 面单打印</div>
             <h1 className="app-title" style={{ fontSize: 22, margin: 0 }}>创建<em>打印面单</em></h1>
           </div>
-          <nav className="top-nav" style={{ margin: 0 }}>
+          <nav className="top-nav" style={{ margin: 0, gap: 8 }}>
             <Link href="/" className="nav-pill active">打印面单</Link>
             <span className="nav-dot" />
             <Link href="/stores" className="nav-pill">门店管理</Link>
           </nav>
+          <button
+            className="nav-pill"
+            style={{ marginLeft: 8, background: 'none', border: '1px solid var(--primary)', cursor: 'pointer', fontSize: 12, padding: '4px 12px', color: 'var(--primary)' }}
+            onClick={async () => {
+              await fetch('/print/api/auth/logout', { method: 'POST' })
+              window.location.href = '/print/login'
+            }}
+          >退出</button>
         </div>
 
         {/* Tab Switcher */}

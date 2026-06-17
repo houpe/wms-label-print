@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { margin: 24px; background: #e8e8e8; font-family: sans-serif; display: flex; gap: 24px; flex-wrap: wrap; }
+  @page { size: 76mm 133mm; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .label {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-family: SimHei, "Microsoft YaHei", "Heiti SC", sans-serif;
+    color: #000;
+  }
+   .label-item {
+     width: 76mm; height: 133mm;
+     position: relative;
+     page-break-after: always;
+     padding: 5mm 4mm 0;
+     display: flex; flex-direction: column;
+     overflow: hidden;
+     background: #fff;
+   }
+   .label-item:last-child { page-break-after: auto; }
+   .header-row {
+     display: flex; align-items: center; justify-content: space-between;
+     padding-bottom: 2.5mm;
+     border-bottom: 0.5pt solid #bbb;
+   }
+   .print-date {
+     font-size: 7pt; color: #999; letter-spacing: 0.5px;
+   }
+   .temp-badge {
+     padding: 1.5mm 3mm; border-radius: 1.5mm; font-weight: 900;
+     font-size: 16pt; letter-spacing: 1px;
+     display: inline-flex; align-items: baseline; white-space: nowrap;
+     line-height: 1;
+   }
+   .qty {
+     font-size: 14pt; font-weight: 900; margin-left: 2mm;
+     letter-spacing: -0.5px; opacity: 0.85;
+   }
+   .cargo-owner {
+     text-align: center; font-weight: bold; color: #000;
+     font-family: "楷体", "KaiTi", "STKaiti", "华文楷体", serif;
+     margin: 3mm 0 1.5mm; letter-spacing: 3px; line-height: 1.25;
+     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+     overflow: hidden; font-size: 24pt;
+   }
+   .store-name {
+     text-align: center; font-weight: 900; color: #000;
+     margin: 1mm 0 2mm; padding-bottom: 3mm;
+     word-break: break-all; line-height: 1.15; font-size: 24pt;
+     border-bottom: 2.5pt solid #000;
+     box-shadow: 0 2.6mm 0 -2.4pt #000;
+   }
+   .info-group {
+     flex: 1; display: flex; flex-direction: column;
+     gap: 2.2mm; padding: 2mm 0;
+   }
+   .info-row {
+     display: flex; align-items: baseline; gap: 2mm;
+     font-size: 13pt; line-height: 1.3;
+   }
+   .info-row--multi { align-items: flex-start; }
+   .info-label {
+     flex: 0 0 auto; min-width: 12mm;
+     font-size: 10pt; font-weight: 600; color: #777;
+     letter-spacing: 1px;
+   }
+   .info-value {
+     flex: 1; font-weight: 700; color: #000; word-break: break-all;
+   }
+   .phone-tail { font-size: 17pt; font-weight: 900; letter-spacing: 1px; }
+   .footer-bar {
+     margin: 0 -4mm; padding: 2.5mm 4mm;
+     background: #000; color: #fff;
+     display: flex; align-items: center; justify-content: space-between;
+     font-weight: 700;
+   }
+   .footer-label {
+     font-size: 10pt; font-weight: 500; opacity: 0.75; letter-spacing: 2px;
+   }
+   .footer-date {
+     font-size: 15pt; font-weight: 900; letter-spacing: 1px;
+   }
+</style>
+</head>
+<body>
+
+<!-- 冷冻（反白黑块） -->
+<div class="label label-item">
+  <div class="header-row">
+    <div class="print-date">26-06-16 14:30:22</div>
+    <div class="temp-badge" style="background:#000;color:#fff;border:2px solid #000;">冷冻<span class="qty">2/3</span></div>
+  </div>
+  <div class="cargo-owner">鲜目录日本料理</div>
+  <div class="store-name">朝阳大悦城店</div>
+  <div class="info-group">
+    <div class="info-row"><span class="info-label">收货人</span><span class="info-value">王经理</span></div>
+    <div class="info-row"><span class="info-label">电&nbsp;&nbsp;话</span><span class="info-value">138****<span class="phone-tail">8888</span> &nbsp;/&nbsp; 010****<span class="phone-tail">6666</span></span></div>
+    <div class="info-row info-row--multi"><span class="info-label">地&nbsp;&nbsp;址</span><span class="info-value">北京市朝阳区朝阳北路101号朝阳大悦城B1层</span></div>
+    <div class="info-row info-row--multi"><span class="info-label">备&nbsp;&nbsp;注</span><span class="info-value">请走北门卸货</span></div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-label">配送日期</span>
+    <span class="footer-date">26-06-16</span>
+  </div>
+</div>
+
+<!-- 冷藏（粗边框） -->
+<div class="label label-item">
+  <div class="header-row">
+    <div class="print-date">26-06-16 14:30:22</div>
+    <div class="temp-badge" style="background:#fff;color:#000;border:2.5px solid #000;">冷藏<span class="qty">1/2</span></div>
+  </div>
+  <div class="cargo-owner">鲜目录日本料理</div>
+  <div class="store-name">朝阳大悦城店</div>
+  <div class="info-group">
+    <div class="info-row"><span class="info-label">收货人</span><span class="info-value">王经理</span></div>
+    <div class="info-row"><span class="info-label">电&nbsp;&nbsp;话</span><span class="info-value">138****<span class="phone-tail">8888</span></span></div>
+    <div class="info-row info-row--multi"><span class="info-label">地&nbsp;&nbsp;址</span><span class="info-value">北京市朝阳区朝阳北路101号</span></div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-label">配送日期</span>
+    <span class="footer-date">26-06-16</span>
+  </div>
+</div>
+
+</body>
+</html>

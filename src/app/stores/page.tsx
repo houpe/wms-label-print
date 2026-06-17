@@ -157,11 +157,19 @@ export default function StoresPage() {
             <h1 className="app-title" style={{ fontSize: 22, margin: 0 }}>门店<em>管理</em></h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <nav className="top-nav" style={{ margin: 0 }}>
+            <nav className="top-nav" style={{ margin: 0, gap: 8 }}>
               <Link href="/" className="nav-pill">打印面单</Link>
               <span className="nav-dot" />
               <Link href="/stores" className="nav-pill active">门店管理</Link>
             </nav>
+            <button
+              className="nav-pill"
+              style={{ background: 'none', border: '1px solid var(--primary)', cursor: 'pointer', fontSize: 12, padding: '4px 12px', color: 'var(--primary)' }}
+              onClick={async () => {
+                await fetch('/print/api/auth/logout', { method: 'POST' })
+                window.location.href = '/print/login'
+              }}
+            >退出</button>
             <div style={{ width: 200 }}>
               <Select
                 instanceId="filter-owner"
