@@ -32,7 +32,8 @@ export async function proxy(req: NextRequest) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: '未登录' }, { status: 401 })
     }
-    const loginUrl = new URL('/login', req.url)
+    const loginUrl = req.nextUrl.clone()
+    loginUrl.pathname = '/login'
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
