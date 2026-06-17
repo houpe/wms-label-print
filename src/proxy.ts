@@ -15,8 +15,13 @@ async function verify(token: string): Promise<boolean> {
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
+
+  // 跳过静态资源
+  if (pathname.startsWith('/_next/') || pathname.includes('favicon.ico')) {
+    return NextResponse.next()
+  }
 
   if (PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))) {
     return NextResponse.next()
@@ -33,8 +38,4 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon\\.ico).*)'],
 }
