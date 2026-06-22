@@ -223,9 +223,9 @@ function printLabels(labels: PrintLabel[], onDone?: () => void) {
      display: inline-block; width: 16mm; font-size: 13pt; font-weight: bold; color: #000; text-align: justify; text-align-last: justify; padding-right: 2mm;
    }
    .info-value { font-weight: bold; color: #000; flex: 1; padding-left: 2mm; }
-   .info-value.phone { font-size: 15pt; letter-spacing: 0.5px; }
+   .info-value.phone { font-size: 13pt; letter-spacing: 0.5px; }
    .info-row.addr { align-items: flex-start; }
-   .info-row.addr .info-value { font-size: 11pt; font-weight: 500; color: #333; line-height: 1.25; }
+   .info-row.addr .info-value { font-size: 16pt; font-weight: bold; color: #000; line-height: 1.25; }
 
    .footer-date {
      text-align: center; font-size: 10pt; font-weight: 600; color: #666;
